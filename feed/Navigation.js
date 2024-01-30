@@ -1,4 +1,4 @@
-import Feed from "./Feed";
+import FeedScreen from "./FeedScreen";
 import {BrowserRouter, Route, Routes, Navigate} from
         "react-router-dom";
 import React, {useState} from "react";

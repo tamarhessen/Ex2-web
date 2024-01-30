@@ -1,0 +1,92 @@
+{
+  "Post1": {
+    "username": "Stargate Fan-girl",
+    "user-image": "img",
+    "post-text": "don't I look hot?",
+    "post-image": "https://live.staticflickr.com/65535/53498037176_34ec15d1e8_c.jpg",
+    "time": "1-1-2024",
+    "likes": "100",
+    "comments": "1"
+  },
+  "Post2": {
+    "username": "Slider",
+    "user-image": "img3",
+    "post-text": "Finally got outside, can you belive this place is just one stargate away?",
+    "post-image": "https://live.staticflickr.com/65535/53497153692_bd411208b9.jpg",
+    "time": "2-1-2024",
+    "likes": "53",
+    "comments": "3"
+  },
+  "Post3": {
+    "username": "Soldier78",
+    "user-image": "img",
+    "post-text": "Working in SG-3 is the best! We just had a mission using daedauls",
+    "post-image": "https://live.staticflickr.com/65535/53498039311_947b4a6723.jpg",
+    "time": "2-1-2024",
+    "likes": "35",
+    "comments": "1"
+  },
+  "Post4": {
+    "username": "AncientBuilder",
+    "user-image": "img3",
+    "post-text": "Look at what I just built:)",
+    "post-image": "https://live.staticflickr.com/65535/53497156442_9d98b96284.jpg",
+    "time": "3-1-2024",
+    "likes": "608",
+    "comments": "7"
+  },
+  "Post5": {
+    "username": "hello",
+    "user-image": "img",
+    "post-text": "hello world hellooooo",
+    "post-image": "img2",
+    "time": "1-1-2024",
+    "likes": "100",
+    "comments": "1"
+  },
+  "Post6": {
+    "username": "hello2",
+    "user-image": "img3",
+    "post-text": "hello world2343214 hellooooo",
+    "post-image": "img3",
+    "time": "1-1-2023",
+    "likes": "100123423141",
+    "comments": "7"
+  },
+  "Post7": {
+    "username": "hello",
+    "user-image": "img",
+    "post-text": "hello world hellooooo",
+    "post-image": "img2",
+    "time": "1-1-2024",
+    "likes": "100",
+    "comments": "1"
+  },
+  "Post8": {
+    "username": "hello2",
+    "user-image": "img3",
+    "post-text": "hello world2343214 hellooooo",
+    "post-image": "img3",
+    "time": "1-1-2023",
+    "likes": "100123423141",
+    "comments": "7"
+  },
+  "Post9": {
+    "username": "hello",
+    "user-image": "img",
+    "post-text": "hello world hellooooo",
+    "post-image": "img2",
+    "time": "1-1-2024",
+    "likes": "100",
+    "comments": "1"
+  },
+  "Post10": {
+    "username": "hello2",
+    "user-image": "img3",
+    "post-text": "hello world2343214 hellooooo",
+    "post-image": "img3",
+    "time": "1-1-2023",
+    "likes": "100123423141",
+    "comments": "7"
+  }
+}
