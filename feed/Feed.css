@@ -1,0 +1,41 @@
+.LeftAlign {
+    position: absolute;
+    left: 1.2%;
+}
+.TopBar {
+    top: 1%;
+}
+.CenterAlign {
+    position: absolute;
+    left: 43%;
+}
+
+.RightAlign {
+    position: absolute;
+    right: 1.2%;
+}
+
+.container {
+    display: flex; /* Use flexbox layout */
+}
+
+.column {
+    flex: 1; /* Each column takes equal space */
+    margin: 10px;
+    height: 700px;
+    overflow: auto
+}
+
+.MainScreen {
+    margin-top: 5%;
+}
+.HiddenButton {
+    padding-top: 4%;
+    padding-bottom: 4%;
+    border-radius: 10%;
+    font-size: 20px;
+    transition: background-color 0.3s;
+}
+.HiddenButton:hover {
+    background-color: lightgray;
+}
