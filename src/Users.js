@@ -5,7 +5,7 @@ export const registerUser = (userData) => {
 };
 
 export const authenticateUser = (username, password,displayName, profilePicture) => {
-  return users.some(user => user.username === username && user.password === password && user.displayName===displayName && user.profilePicture===profilePicture);
+  return users.some(user => user.username === username && user.password === password);
 };
 
 export const isUsernameEqual = (username) => {
