@@ -6,6 +6,7 @@ import Signup from './Signup';
 import { useNavigate } from 'react-router-dom';
 import { authenticateUser } from './Users';
 
+
 function Login() {
   const [showSignupModal, setShowSignupModal] = useState(false);
   const [username, setUsername] = useState('');
@@ -32,14 +33,19 @@ function Login() {
   };
 
   const handleCloseSignupModal = () => {
-    console.log("ww");
+    console.log("Closing signup modal");
     const modal = document.getElementById('signupModal'); // Assuming 'signupModal' is the ID of your modal
-    modal.dataset.bsDismiss = 'modal'; // Setting the data-bs-dismiss attribute
-    console.log("z");
-    setShowSignupModal(false);
-    console.log("ee");
-  };
+    const backdrop = document.getElementsByClassName('modal-backdrop')[0]; // Get the first element with class 'modal-backdrop'
 
+    if (modal) {
+      modal.remove(); // Remove the modal element from the DOM
+    }
+    if (backdrop) {
+      backdrop.remove(); // Remove the backdrop element from the DOM
+  }
+    setShowSignupModal(false); // Update the state to reflect the modal being closed
+  };
+  
   useEffect(() => {
     modalRef.current = new Modal(document.getElementById('signupModal'), {});
   }, []);

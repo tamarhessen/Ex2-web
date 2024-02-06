@@ -58,7 +58,7 @@ body {
 
 .form-group input[type="text"],
 .form-group input[type="password"] {
-  width: 90%; /* Adjust the width relative to the container's width */
+  width: 100%; /* Adjust the width relative to the container's width */
   padding: 5%;
   border-radius: 10px; /* Adjust the border radius */
   position: relative;

@@ -19,6 +19,7 @@ function Signup({ handleCloseSignupModal}) {
 
   // Function to reset the form fields
   const resetForm = () => {
+    console.log("reset");
     setUsername('');
     setPassword('');
     setConfirmPassword('');
@@ -111,101 +112,102 @@ console.log("ddd");
     if(isUsernameEqual(username)){
       errors.username = "This username name is taken"
           }
-          console.log("v");
+         
     // Display errors if any
     setErrors(errors);
-    console.log("l");
+  
     if (Object.keys(errors).length === 0) {
-      console.log("mm");
+     
       const userData = { username, password, displayName, profilePicture };
       registerUser(userData);
-      console.log("r");
+      
       resetForm();
-      console.log("e");
+   
      handleCloseSignupModal();
-     console.log("bb");
+   
     }
-    console.log("ss");
-
+   
   };
- console.log("qq");
+
 
   return (
-    <div className="signup-container">
-      <button type="button" className="close-button" onClick={handleCloseSignupModal} data-bs-dismiss="modal">X</button>
-      <div className="signup-header">
-        <h2>Sign Up</h2>
-        <p>It's quick and easy.</p>
+   <div className="signup-container">
+  <button type="button" className="close-button" onClick={resetForm} data-bs-dismiss="modal">X</button>
+  <div className="signup-header">
+    <h2>Sign Up</h2>
+    <p>It's quick and easy.</p>
+  </div>
+  <form className="signup-form" onSubmit={handleSubmit}>
+    <div className="form-group">
+      <input
+        type="text"
+        placeholder="Username"
+        value={username}
+        onChange={handleUsernameChange}
+        className={errors.username ? 'input-error' : ''}
+      />
+      {errors.username && <span className="error-message">{errors.username}</span>}
+    </div>
+    <div className="form-group">
+      <input
+        type="password"
+        placeholder="Password"
+        value={password}
+        onChange={handlePasswordChange}
+        className={errors.password ? 'input-error' : ''}
+      />
+      {errors.password && <span className="error-message">{errors.password}</span>}
+      {!errors.password && (
+        <p className="password-requirement">Password must be at least 8 characters long</p>
+      )}
+    </div>
+    <div className="form-group">
+      <input
+        type="password"
+        placeholder="Confirm Password"
+        value={confirmPassword}
+        onChange={handleConfirmPasswordChange}
+        className={errors.confirmPassword ? 'input-error' : ''}
+      />
+      {errors.confirmPassword && <span className="error-message">{errors.confirmPassword}</span>}
+    </div>
+    <div className="form-group">
+      <input
+        type="text"
+        placeholder="Display Name"
+        value={displayName}
+        onChange={handleDisplayNameChange}
+        className={errors.displayName ? 'input-error' : ''}
+      />
+      {errors.displayName && <span className="error-message">{errors.displayName}</span>}
+    </div>
+    <div className="form-group">
+      <label htmlFor="profile-picture">Profile Picture:</label>
+      <input
+        type="file"
+        id="profile-picture"
+        accept="image/*"
+        onChange={handleProfilePictureChange}
+        ref={fileInputRef}
+        style={{ display: 'none' }}
+      />
+      <button type="button" className="upload-btn" onClick={() => fileInputRef.current.click()}>Upload from Computer</button>
+      <button type="button" className="take-picture-btn" onClick={handleCameraCapture}>Take Picture</button>
+      {/* Display error message for profile picture */}
+      {errors.profilePicture && <span className="error-message">{errors.profilePicture}</span>}
+    </div>
+    {profilePicture && (
+      <div className="preview">
+        <img src={URL.createObjectURL(profilePicture)} alt="Profile" />
       </div>
-      <form className="signup-form" onSubmit={handleSubmit}>
-        <div className="form-group">
-          <input
-            type="text"
-            placeholder="Username"
-            value={username}
-            onChange={handleUsernameChange}
-            className={errors.username ? 'input-error' : ''}
-          />
-          {errors.username && <span className="error-message">{errors.username}</span>}
-        </div>
-        <div className="form-group">
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={handlePasswordChange}
-            className={errors.password ? 'input-error' : ''}
-          />
-          {errors.password && <span className="error-message">{errors.password}</span>}
-          {!errors.password && (
-            <p className="password-requirement">Password must be at least 8 characters long</p>
-          )}
-        </div>
-        <div className="form-group">
-          <input
-            type="password"
-            placeholder="Confirm Password"
-            value={confirmPassword}
-            onChange={handleConfirmPasswordChange}
-            className={errors.confirmPassword ? 'input-error' : ''}
-          />
-          {errors.confirmPassword && <span className="error-message">{errors.confirmPassword}</span>}
-        </div>
-        <div className="form-group">
-          <input
-            type="text"
-            placeholder="Display Name"
-            value={displayName}
-            onChange={handleDisplayNameChange}
-            className={errors.displayName ? 'input-error' : ''}
-          />
-          {errors.displayName && <span className="error-message">{errors.displayName}</span>}
-        </div>
-        <div className="form-group">
-          <label htmlFor="profile-picture">Profile Picture:</label>
-          <input
-            type="file"
-            id="profile-picture"
-            accept="image/*"
-            onChange={handleProfilePictureChange}
-            ref={fileInputRef}
-            style={{ display: 'none' }}
-          />
-         <button type="button" className="upload-btn" onClick={() => fileInputRef.current.click()}>Upload from Computer</button>
-<button type="button" className="take-picture-btn" onClick={handleCameraCapture}>Take Picture</button>
-
-        </div>
-        {profilePicture && (
-          <div className="preview">
-            <img src={URL.createObjectURL(profilePicture)} alt="Profile" />
-          </div>
-        )}
-        <p className="terms">
+    )}
+    <p className="terms">
           By clicking Sign Up, you agree to our Terms, Data Policy and Cookies Policy. You may receive SMS notifications from us and can opt out at any time.
         </p>
-        <button type="submit" className="signup-btn green-btn" onClick={handleSubmit}>Sign Up</button>
-      </form>
-    </div>
+        <button type="submit" className="signup-btn green-btn">Sign Up</button>
+  </form>
+</div>
+
    
   );
 }
