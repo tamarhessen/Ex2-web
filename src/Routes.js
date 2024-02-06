@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'; // Import Routes and Route
 
-import Login from './Login';
+import Login from './login/Login';
 import Signup from './SignUp'; // Assuming you have a Signup component
 
 function App() {
