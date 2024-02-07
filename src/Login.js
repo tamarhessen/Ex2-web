@@ -1,16 +1,18 @@
+
 import React, { useState, useRef, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Modal } from 'bootstrap';
 import './Login.css';
 import Signup from './Signup';
 import { useNavigate } from 'react-router-dom';
-import { authenticateUser } from './Users';
-
+import { authenticateUser, getProfilePictureByUsername } from './Users';
 
 function Login() {
   const [showSignupModal, setShowSignupModal] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [displayName, setDisplayName] = useState('');
+  const [profilePicture, setProfilePicture] = useState('');
   const [loginError, setLoginError] = useState('');
   const modalRef = useRef(null);
   const navigate = useNavigate();
@@ -21,7 +23,11 @@ function Login() {
     const isUserAuthenticated = authenticateUser(username, password);
     
     if (isUserAuthenticated) {
-      navigate('/HelloWorldPage');
+          setUsername(username);
+        setProfilePicture(profilePicture);
+        setDisplayName(displayName);
+        // Navigate to the feed screen and pass username and profilePicture as location state
+        navigate('../feed/', { state: { displayName, profilePicture } });
     } else {
       setLoginError('Invalid username or password');
     }
@@ -98,7 +104,7 @@ function Login() {
       <div className="modal fade" id="signupModal" tabIndex="-1" aria-labelledby="signupModalLabel" aria-hidden="true">
         <div className="modal-dialog">
           <div className="modal-content">
-          <Signup handleCloseSignupModal={handleCloseSignupModal}/>
+            <Signup handleCloseSignupModal={handleCloseSignupModal}/>
           </div>
         </div>
       </div>

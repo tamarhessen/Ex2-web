@@ -118,12 +118,14 @@ console.log("ddd");
   
     if (Object.keys(errors).length === 0) {
      
-      const userData = { username, password, displayName, profilePicture };
+      const userData = {username, password, displayName, profilePicture };
+      console.log(displayName);
       registerUser(userData);
       
       resetForm();
    
      handleCloseSignupModal();
+     console.log(displayName);
    
     }
    
@@ -212,4 +214,4 @@ console.log("ddd");
   );
 }
 
-export default Signup;
+export default Signup; 
