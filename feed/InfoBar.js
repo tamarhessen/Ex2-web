@@ -1,10 +1,11 @@
 import {BackToMenu} from "./Navigation"
-import './Feed.css'
+
+
 function LeftSide() {
     return (
         <>
             <div className="column LeftAlign TopBar">
-            <span id="Logo" onClick={BackToMenu}>Hey</span>
+            <img src="https://live.staticflickr.com/65535/53506197898_55318ce5f5_t.jpg" id="Logo" onClick={BackToMenu}/>
             <input placeholder="Search App"></input>
             </div>
         </>
@@ -15,7 +16,7 @@ function Center() {
     return (
         <>
             <div className="column CenterAlign TopBar">
-                <button>Home</button>
+                <button type="button" className="btn btn-primary">Home</button>
                 <button>Friends</button>
                 <button>Groups</button>
             </div>
@@ -39,7 +40,7 @@ function RightSide() {
 function InfoBar() {
     return (
         <>
-            <div className="container">
+            <div className="TopBarContainer">
                 <LeftSide></LeftSide>
                 <Center></Center>
                 <RightSide></RightSide>

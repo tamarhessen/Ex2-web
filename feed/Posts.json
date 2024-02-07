@@ -6,7 +6,11 @@
     "post-image": "https://live.staticflickr.com/65535/53498037176_34ec15d1e8_c.jpg",
     "time": "1-1-2024",
     "likes": "100",
-    "comments": "1"
+    "comments": "1",
+    "liked": false,
+    "commentsList": [{"username": "donky", "userImg": "abc", "comment": "yes"},
+      {"username": "donky", "userImg": "abc", "comment": "obv"},
+      {"username": "donky", "userImg": "abc", "comment": "lol no"}]
   },
   "Post2": {
     "username": "Slider",
@@ -15,7 +19,8 @@
     "post-image": "https://live.staticflickr.com/65535/53497153692_bd411208b9.jpg",
     "time": "2-1-2024",
     "likes": "53",
-    "comments": "3"
+    "comments": "3",
+    "liked": false
   },
   "Post3": {
     "username": "Soldier78",
@@ -24,7 +29,8 @@
     "post-image": "https://live.staticflickr.com/65535/53498039311_947b4a6723.jpg",
     "time": "2-1-2024",
     "likes": "35",
-    "comments": "1"
+    "comments": "1",
+    "liked": false
   },
   "Post4": {
     "username": "AncientBuilder",
@@ -33,7 +39,8 @@
     "post-image": "https://live.staticflickr.com/65535/53497156442_9d98b96284.jpg",
     "time": "3-1-2024",
     "likes": "608",
-    "comments": "7"
+    "comments": "7",
+    "liked": false
   },
   "Post5": {
     "username": "hello",
@@ -42,7 +49,8 @@
     "post-image": "img2",
     "time": "1-1-2024",
     "likes": "100",
-    "comments": "1"
+    "comments": "1",
+    "liked": false
   },
   "Post6": {
     "username": "hello2",
@@ -51,7 +59,8 @@
     "post-image": "img3",
     "time": "1-1-2023",
     "likes": "100123423141",
-    "comments": "7"
+    "comments": "7",
+    "liked": false
   },
   "Post7": {
     "username": "hello",
@@ -60,7 +69,8 @@
     "post-image": "img2",
     "time": "1-1-2024",
     "likes": "100",
-    "comments": "1"
+    "comments": "1",
+    "liked": false
   },
   "Post8": {
     "username": "hello2",
@@ -69,7 +79,8 @@
     "post-image": "img3",
     "time": "1-1-2023",
     "likes": "100123423141",
-    "comments": "7"
+    "comments": "7",
+    "liked": false
   },
   "Post9": {
     "username": "hello",
@@ -78,15 +89,17 @@
     "post-image": "img2",
     "time": "1-1-2024",
     "likes": "100",
-    "comments": "1"
+    "comments": "1",
+    "liked": false
   },
   "Post10": {
     "username": "hello2",
     "user-image": "img3",
     "post-text": "hello world2343214 hellooooo",
-    "post-image": "img3",
+    "post-image": "",
     "time": "1-1-2023",
     "likes": "100123423141",
-    "comments": "7"
+    "comments": "7",
+    "liked": false
   }
 }
