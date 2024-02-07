@@ -116,7 +116,8 @@ function Post({ id, text, liked, comments, image, onLike, onRemove, onAddComment
                         <Comments
                             text={text}
                             image={image}
-                            comments={comments}></Comments>
+                            oldComments={comments}
+                            account={account}></Comments>
                     </>
                 </Modal.Body>
                 <Modal.Footer>
