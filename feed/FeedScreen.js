@@ -4,7 +4,7 @@ import {useState} from "react";
 import './LightModeFeed.css'
 import './NightModeFeed.css'
 
-function FeedScreen() {
+function FeedScreen({username, userImg}) {
     const [mode, setMode] = useState(true)
 
     return (<>
@@ -12,8 +12,8 @@ function FeedScreen() {
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css"
               integrity="sha256-2TnSHycBDAm2wpZmgdi0z81kykGPJAkiUY+Wf97RbvY=" crossOrigin="anonymous"/>
         <div className={mode ? "light-mode" : "night-mode"}>
-        <InfoBar userImg={"abc"}></InfoBar>
-        <MainScreen username={"hello world"} userImg={"abc"} mode={mode} setMode={setMode}></MainScreen>
+        <InfoBar userImg={userImg}></InfoBar>
+        <MainScreen username={username} userImg={userImg} mode={mode} setMode={setMode}></MainScreen>
         </div>
     </>)
 }
