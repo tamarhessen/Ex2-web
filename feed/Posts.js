@@ -3,8 +3,9 @@ import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import Post from "./Post";
 import postsData from "./Posts.json";
+import {ModalDialog} from "react-bootstrap";
 
-function PostList({ username, userImg }) {
+function PostList({ username, userImg, mode }) {
     const [posts, setPosts] = useState([]);
     const [image, setImage] = useState(undefined);
     const [shiftDown, setShiftDown] = useState(false);
@@ -22,9 +23,11 @@ function PostList({ username, userImg }) {
                 id: index + 1,
                 text: post["post-text"],
                 liked: post.liked,
+                likes: post.likes,
                 comments: post.commentsList,
                 image: post["post-image"],
                 username: post.username,
+                userImg: post["user-image"],
                 account: username
             };
         }));
@@ -39,6 +42,7 @@ function PostList({ username, userImg }) {
                 id: Date.now(),
                 text: text,
                 liked: false,
+                likes: 0,
                 comments: [],
                 image: image,
                 username: username,
@@ -97,26 +101,28 @@ function PostList({ username, userImg }) {
                             id={post.id}
                             text={post.text}
                             liked={post.liked}
+                            likes={post.likes}
                             comments={post.comments}
                             image={post.image}
                             onLike={() => handleLikePost(post.id)}
                             onRemove={() => handleRemovePost(post.id)}
                             username={post.username}
-                            userImage={userImg}
+                            userImage={post.userImg}
                             account={username}
                             onAddComment={(comment) => handleAddComment(post.id, comment)}
                             onEdit={(newText, newImg) => handleEditPost(post.id, newText, newImg)}
+                            mode={mode}
                         />
                     ))}
                 </>
             </div>
             <Modal show={show} onHide={handleClose}>
+                <div className={mode ? "light-mode" : "night-mode"}>
                 <Modal.Header closeButton>
                     <Modal.Title>Add post</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <>
-                        <div className={"uploadPost"}>
                         <textarea
                             ref={textRef}
                             // type="text-box"
@@ -152,7 +158,6 @@ function PostList({ username, userImg }) {
                                     handleImageUpload(image);
                                 }}
                             />
-                        </div>
                         {image && <img src={URL.createObjectURL(image)} alt="Preview" className={"image"} />}
                     </>
                 </Modal.Body>
@@ -170,6 +175,7 @@ function PostList({ username, userImg }) {
                         Add Post
                     </Button>
                 </Modal.Footer>
+                </div>
             </Modal>
         </>
     );

@@ -4,8 +4,13 @@ import Button from "react-bootstrap/Button";
 import AddComment from "./AddComment";
 import Comments from "./Comments";
 
-function Post({ id, text, liked, comments, image, onLike, onRemove, onAddComment, onEdit, username, userImage, account }) {
-    console.log("image", image);
+function Post({ id, text, liked, likes, comments, image, onLike, onRemove, onAddComment, onEdit, username, userImage, account, mode }) {
+    let modeName = "";
+    if (mode) {
+        modeName = "light-mode"
+    } else {
+        modeName = "night-mode"
+    }
     const [editMode, setEditMode] = useState(false);
     const [editText, setEditText] = useState(text);
     const [shiftDown, setShiftDown] = useState(false);
@@ -75,7 +80,7 @@ function Post({ id, text, liked, comments, image, onLike, onRemove, onAddComment
                 )}
             </div>
             <span onClick={onLike} style={{ color: liked ? 'red' : 'black' }}>
-                {liked ? '❤️' : '🤍'}
+                {liked ? '❤️' : '🤍'} {liked ? parseInt(likes)+ 1 : likes}
             </span>
             {account === username ? (
                 <>
@@ -108,27 +113,27 @@ function Post({ id, text, liked, comments, image, onLike, onRemove, onAddComment
                 <span onClick={handleShow} className={"btn btn-primary"}>Add comment</span>
             )}
             <Modal show={show} onHide={handleClose} style={{ overflow: 'hidden'}}>
+                <div className={modeName}>
                 <Modal.Header closeButton>
                     <Modal.Title>View Comments</Modal.Title>
                 </Modal.Header>
                 <Modal.Body className={"modalBody"}>
-                    <>
                         <Comments
                             text={text}
                             image={image}
                             oldComments={comments}
                             account={account}></Comments>
-                    </>
                 </Modal.Body>
                 <Modal.Footer>
                     <AddComment
-                        username={username}
+                        username={account}
                         onAddComment={onAddComment}
                     ></AddComment>
                     <Button variant="secondary" onClick={handleClose}>
                         Close
                     </Button>
                 </Modal.Footer>
+                </div>
             </Modal>
         </div>
     );

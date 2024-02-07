@@ -1,13 +1,13 @@
 import FeedScreen from "./FeedScreen";
-import {BrowserRouter, Route, Routes, Navigate} from
+import {BrowserRouter, Route, Routes, Navigate, useNavigate} from
         "react-router-dom";
 import React, {useState} from "react";
 
-function BackToMenu() {
-    return (
-        <></> // should change the path to feed.
 
-    );
+function BackToMenu({navigate}) {
+
+    console.log("hello");
+    navigate("/");
 }
 
 function SendToUserPage() {

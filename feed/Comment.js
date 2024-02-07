@@ -29,8 +29,8 @@ function Comment({ id, username, userImg, comment, account, onDelete }) {
     };
 
     return (
-        <div>
-            <img src={userImg} className="user-img" alt="User" />
+        <div className={"comment"}>
+            <img src={userImg} className="Logo" alt="User" />
             <div className="message-box">
                 <div className="comment-header">
                     <span className="username">{username}</span>
