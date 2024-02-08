@@ -165,3 +165,10 @@
 .take-picture-btn:hover {
     background-color: #bbb; /* Lighter gray color on hover */
 }
+/* CSS to limit the image size */
+.preview img {
+    max-width: 50%; /* Maximum width */
+    max-height: 50%; /* Maximum height */
+    position: center;
+    
+}
