@@ -12,7 +12,7 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route exact path="/" element={<Login setDisplayName={setDisplayName} setProfilePicture={setDisplayName} />} />
+        <Route exact path="/" element={<Login setDisplayName={setDisplayName} setProfilePicture={setProfilePicture} />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/feed" element={<FeedScreen displayName={displayName} profilePicture={profilePicture} />} />
       </Routes>

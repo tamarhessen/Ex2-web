@@ -88,7 +88,7 @@ const handleProfilePictureChange = (e) => {
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-console.log("ddd");
+
  
     // Validation
     const errors = {};
@@ -117,15 +117,13 @@ console.log("ddd");
     setErrors(errors);
   
     if (Object.keys(errors).length === 0) {
-     
+     // Example usage of registerUser function;
       const userData = {username, password, displayName, profilePicture };
-      console.log(displayName);
-      registerUser(userData);
       
+      registerUser(userData);
       resetForm();
-   
      handleCloseSignupModal();
-     console.log(displayName);
+     
    
     }
    

@@ -20,6 +20,7 @@ function App() {
         <Route path="/" element={<Login setDisplayName={setDisplayName} setProfilePicture={setProfilePicture} />} />
         <Route path="/create-account" element={<Signup />} />
         <Route path="/feed" element={<FeedScreen displayName={displayName} profilePicture={profilePicture} />} />
+        
         {/* Other routes */}
       </Routes>
     </Router>

@@ -5,7 +5,7 @@ import { Modal } from 'bootstrap';
 import './Login.css';
 import Signup from './Signup';
 import { useNavigate } from 'react-router-dom';
-import { authenticateUser, getProfilePictureByUsername } from './Users';
+import { authenticateUser, getDisplayName, getProfilePicture } from './Users';
 
 function Login() {
   const [showSignupModal, setShowSignupModal] = useState(false);
@@ -17,17 +17,21 @@ function Login() {
   const modalRef = useRef(null);
   const navigate = useNavigate();
 
+
+
   const handleSubmit = (e) => {
     e.preventDefault();
-
+ 
     const isUserAuthenticated = authenticateUser(username, password);
     
     if (isUserAuthenticated) {
-          setUsername(username);
-        setProfilePicture(profilePicture);
-        setDisplayName(displayName);
-        // Navigate to the feed screen and pass username and profilePicture as location state
-        navigate('../feed/', { state: { displayName, profilePicture } });
+  
+    // Retrieve the display name and profile picture from the registered user's data
+  const displayNameValue=getDisplayName(username);
+  
+  const profilePictureValue=getProfilePicture(username);
+    // Navigate to the feed screen
+    navigate('/feed', { state: {  displayName: displayNameValue, profilePicture: profilePictureValue} });
     } else {
       setLoginError('Invalid username or password');
     }
