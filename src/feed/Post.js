@@ -3,8 +3,27 @@ import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import AddComment from "./AddComment";
 import Comments from "./Comments";
+import Dropdown from "react-bootstrap/Dropdown";
 
-function Post({ id, text, liked, likes, comments, image, onLike, onRemove, onAddComment, onEdit, username, userImage, account, mode }) {
+function Share() {
+    return (
+        <span >
+        <Dropdown>
+            <Dropdown.Toggle variant="secondary" id="dropdown-basic">
+                Share
+            </Dropdown.Toggle>
+
+            <Dropdown.Menu>
+                <Dropdown.Item href="#">Share now (friends)</Dropdown.Item>
+                <Dropdown.Item href="#">Share to feed</Dropdown.Item>
+                <Dropdown.Item href="#">Copy link</Dropdown.Item>
+            </Dropdown.Menu>
+        </Dropdown>
+        </span>
+    );
+}
+
+function Post({ id, text, liked, likes, time, comments, image, onLike, onRemove, onAddComment, onEdit, username, userImage, account, mode }) {
     let modeName = "";
     if (mode) {
         modeName = "light-mode"
@@ -34,9 +53,14 @@ function Post({ id, text, liked, likes, comments, image, onLike, onRemove, onAdd
 
     return (
         <div className={"post-container"}>
-            <div>
-                <img src={userImage} className={"Logo"} alt="User logo" />
-                {username}
+            <div className={"header"}>
+                <div className={"left-header"}>
+                    <img src={userImage} className={"Logo"} alt="User logo" />
+                    {username}
+                </div>
+                <div className={"right-header"}>
+                    {time}
+                </div>
             </div>
             <div>
                 {editMode ? (
@@ -79,26 +103,27 @@ function Post({ id, text, liked, likes, comments, image, onLike, onRemove, onAdd
                     </>
                 )}
             </div>
-            <span onClick={onLike} style={{ color: liked ? 'red' : 'black' }}>
+            <div style={{display: "flex"}}>
+            <span onClick={onLike} style={{ color: liked ? 'red' : 'black' ,flex: 1}} className={"btn btn-primary"}>
                 {liked ? '❤️' : '🤍'} {liked ? parseInt(likes)+ 1 : likes}
             </span>
             {account === username ? (
                 <>
                     {editMode ? (
                         <>
-                            <button onClick={handleSaveEdit} className={"btn btn-primary"}>Save</button>
-                            <button onClick={handleCancelEdit} className={"btn btn-secondary"}>Cancel</button>
+                            <button style={{flex: 1}} onClick={handleSaveEdit} className={"btn btn-primary"}>Save</button>
+                            <button style={{flex: 1}} onClick={handleCancelEdit} className={"btn btn-secondary"}>Cancel</button>
                         </>
                     ) : (
                         <>
-                            <button onClick={handleEdit} className={"btn btn-warning"}>
+                            <button style={{flex: 1}} onClick={handleEdit} className={"btn btn-warning"}>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                      className="bi bi-pencil" viewBox="0 0 16 16">
                                     <path
                                         d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325"/>
                                 </svg>
                             </button>
-                            <button onClick={onRemove} className={"btn btn-danger"}>
+                            <button style={{flex: 1}} onClick={onRemove} className={"btn btn-danger"}>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                      className="bi bi-x" viewBox="0 0 16 16">
                                     <path
@@ -110,29 +135,33 @@ function Post({ id, text, liked, likes, comments, image, onLike, onRemove, onAdd
                 </>
             ) : null}
             {editMode ? (null) : (
-                <span onClick={handleShow} className={"btn btn-primary"}>Add comment</span>
+                <span style={{flex: 1}} onClick={handleShow} className={"btn btn-primary"}>Comment</span>
             )}
+            <span style={{flex: 1}}>
+            <Share></Share>
+            </span>
+            </div>
             <Modal show={show} onHide={handleClose} style={{ overflow: 'hidden'}}>
                 <div className={modeName}>
-                <Modal.Header closeButton>
-                    <Modal.Title>View Comments</Modal.Title>
-                </Modal.Header>
-                <Modal.Body className={"modalBody"}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>View Comments</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body className={"modalBody"}>
                         <Comments
                             text={text}
                             image={image}
                             oldComments={comments}
                             account={account}></Comments>
-                </Modal.Body>
-                <Modal.Footer>
-                    <AddComment
-                        username={account}
-                        onAddComment={onAddComment}
-                    ></AddComment>
-                    <Button variant="secondary" onClick={handleClose}>
-                        Close
-                    </Button>
-                </Modal.Footer>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <AddComment
+                            username={account}
+                            onAddComment={onAddComment}
+                        ></AddComment>
+                        <Button variant="secondary" onClick={handleClose}>
+                            Close
+                        </Button>
+                    </Modal.Footer>
                 </div>
             </Modal>
         </div>

@@ -4,22 +4,22 @@ import { useState } from "react";
 import './LightModeFeed.css';
 import './NightModeFeed.css';
 import { useLocation } from 'react-router-dom';
+import Dropdown from 'react-bootstrap/Dropdown';
 
 function FeedScreen() {
+    console.log("hi2")
     const [mode, setMode] = useState(true);
     const location = useLocation();
     const { state } = location;
     
-    const { displayName, profilePicture } = location.state;
-
+    const { displayName, profilePicture, setLoggedIn} = location.state;
+    console.log(setLoggedIn)
     // Convert file object to URL
     const profilePictureURL = profilePicture ? URL.createObjectURL(profilePicture) : null;
 
     return (
         <>
             <title>Feed</title>
-            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css"
-                  integrity="sha256-2TnSHycBDAm2wpZmgdi0z81kykGPJAkiUY+Wf97RbvY=" crossOrigin="anonymous"/>
             <div className={mode ? "light-mode" : "night-mode"}>
                 {/* Assuming profilePicture is a file object */}
                 {profilePictureURL && <InfoBar userImg={profilePictureURL}></InfoBar>}

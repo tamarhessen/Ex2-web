@@ -2,11 +2,13 @@ import FeedScreen from "./FeedScreen";
 import {BrowserRouter, Route, Routes, Navigate, useNavigate} from
         "react-router-dom";
 import React, {useState} from "react";
+// import {LoggedIn} from "../loggedIn";
 
 
 function BackToMenu({navigate}) {
+    // let {loggedIn, setLoggedIn} = LoggedIn();
+    // setLoggedIn(false)
 
-    console.log("hello");
     navigate("/");
 }
 

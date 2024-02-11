@@ -24,6 +24,7 @@ function PostList({ username, userImg, mode }) {
                 text: post["post-text"],
                 liked: post.liked,
                 likes: post.likes,
+                time: post.time,
                 comments: post.commentsList,
                 image: post["post-image"],
                 username: post.username,
@@ -37,12 +38,15 @@ function PostList({ username, userImg, mode }) {
     const handleShow = () => setShow(true);
 
     const handleAddPost = (text, image) => {
+        let d = new Date();
+        let time = d.getDate() + "-" + (d.getMonth() + 1) + "-" + d.getFullYear()
         if (text.trim() !== '' || image) {
             setPosts([...posts, {
                 id: Date.now(),
                 text: text,
                 liked: false,
                 likes: 0,
+                time: time,
                 comments: [],
                 image: image,
                 username: username,
@@ -104,6 +108,7 @@ function PostList({ username, userImg, mode }) {
                             likes={post.likes}
                             comments={post.comments}
                             image={post.image}
+                            time={post.time}
                             onLike={() => handleLikePost(post.id)}
                             onRemove={() => handleRemovePost(post.id)}
                             username={post.username}
@@ -118,11 +123,11 @@ function PostList({ username, userImg, mode }) {
             </div>
             <Modal show={show} onHide={handleClose}>
                 <div className={mode ? "light-mode" : "night-mode"}>
-                <Modal.Header closeButton>
-                    <Modal.Title>Add post</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Add post</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <>
                         <textarea
                             ref={textRef}
                             // type="text-box"
@@ -158,23 +163,23 @@ function PostList({ username, userImg, mode }) {
                                     handleImageUpload(image);
                                 }}
                             />
-                        {image && <img src={URL.createObjectURL(image)} alt="Preview" className={"image"} />}
-                    </>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={handleClose}>
-                        Cancel
-                    </Button>
-                    <Button variant="primary" onClick={() => {
-                        const text = textRef.current.value;
-                        const image = imgRef.current.files[0];
-                        handleAddPost(text, image);
-                        handleImageUpload('');
-                        handleClose()
-                    }}>
-                        Add Post
-                    </Button>
-                </Modal.Footer>
+                            {image && <img src={URL.createObjectURL(image)} alt="Preview" className={"image"} />}
+                        </>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="secondary" onClick={handleClose}>
+                            Cancel
+                        </Button>
+                        <Button variant="primary" onClick={() => {
+                            const text = textRef.current.value;
+                            const image = imgRef.current.files[0];
+                            handleAddPost(text, image);
+                            handleImageUpload('');
+                            handleClose()
+                        }}>
+                            Add Post
+                        </Button>
+                    </Modal.Footer>
                 </div>
             </Modal>
         </>

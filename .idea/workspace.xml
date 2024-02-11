@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="ce1aa1cd-dc67-4b6e-9365-c94d1d72503a" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/loggedIn.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/Ex2-web.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Ex2-web.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Login.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Login.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/feed/FeedScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/feed/FeedScreen.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/feed/InfoBar.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/feed/InfoBar.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/feed/LightModeFeed.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/feed/LightModeFeed.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/feed/MainRight.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/feed/MainRight.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/feed/Navigation.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/feed/Navigation.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/feed/Post.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/feed/Post.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/feed/Posts.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/feed/Posts.js" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="JavaScript File" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "node.js.selected.package.tslint": "(autodetect)",
+    "ts.external.directory.path": "/Applications/WebStorm.app/Contents/plugins/javascript-impl/jsLanguageServicesImpl/external"
+  }
+}]]></component>
+  <component name="TaskManager">
+    <servers />
+  </component>
+</project>
