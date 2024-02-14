@@ -5,7 +5,7 @@ import React, {useState} from "react";
 // import {LoggedIn} from "../loggedIn";
 
 
-function BackToMenu({navigate}) {
+function BackToMenu({navigate, setLoggedIn}) {
     // let {loggedIn, setLoggedIn} = LoggedIn();
     // setLoggedIn(false)
 

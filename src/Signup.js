@@ -141,6 +141,7 @@ const handleProfilePictureChange = (e) => {
     <div className="form-group">
       <input
         type="text"
+        id="Username-signup"
         placeholder="Username"
         value={username}
         onChange={handleUsernameChange}
@@ -151,6 +152,7 @@ const handleProfilePictureChange = (e) => {
     <div className="form-group">
       <input
         type="password"
+        id="Password-signup"
         placeholder="Password"
         value={password}
         onChange={handlePasswordChange}

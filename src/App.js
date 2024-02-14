@@ -14,20 +14,20 @@ function App() {
   const [displayName, setDisplayName] = useState(''); 
   const [profilePicture, setProfilePicture] = useState('');
   let {loggedIn, setLoggedIn} = LoggedIn();
-
+  let abc = "abc"
   return (
     <Router>
       <Routes>
         {/* Pass setUsername and setProfilePicture as props */}
         <Route path="/" element={<Login setLoggedIn={setLoggedIn} setDisplayName={setDisplayName} setProfilePicture={setProfilePicture} />} />
-        <Route path="/create-account" element={<Signup />} />
           { loggedIn ? (
-              <Route path="/feed" element={<FeedScreen displayName={displayName} profilePicture={profilePicture} />} />
+              <Route path="/feed" element={<FeedScreen setLoggedIn={setLoggedIn} displayName={displayName} profilePicture={profilePicture} />} />
           ) : (
               <Route path='/feed' element={<Navigate replace to={"/"}/>} />
           )}
-
         {/* Other routes */}
+        <Route path="*" element={<Navigate replace to="/" />} />
+
       </Routes>
     </Router>
   );

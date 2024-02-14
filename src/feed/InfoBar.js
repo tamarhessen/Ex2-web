@@ -2,12 +2,12 @@ import {BackToMenu} from "./Navigation"
 import {useNavigate} from "react-router-dom";
 
 
-function LeftSide() {
+function LeftSide({setLoggedIn}) {
     const navigate = useNavigate();
     return (
         <>
             <div className="column LeftAlign TopBar">
-                <img src="https://live.staticflickr.com/65535/53506197898_55318ce5f5_t.jpg" id="Logo" onClick={() => BackToMenu({navigate})}/>
+                <img src="https://live.staticflickr.com/65535/53506197898_55318ce5f5_t.jpg" id="Logo" onClick={() => BackToMenu({navigate, setLoggedIn})}/>
                 <input className={"search"} placeholder="Search App"></input>
             </div>
         </>
@@ -57,11 +57,11 @@ function RightSide({userImg}) {
         </>
     )
 }
-function InfoBar({userImg}) {
+function InfoBar({userImg,setLoggedIn}) {
     return (
         <>
             <div className="TopBarContainer">
-                <LeftSide></LeftSide>
+                <LeftSide setLoggedIn={setLoggedIn}></LeftSide>
                 <Center></Center>
                 <RightSide userImg={userImg}></RightSide>
             </div>
