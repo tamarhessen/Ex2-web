@@ -1,20 +1,16 @@
 import Comment from "./Comment";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 
-function Comments({ text, image, oldComments, account }) {
-    const [comments, setComments] = useState(oldComments);
-    const onDelete = (id) => {
-        console.log(oldComments);
-        if (id > -1) {
-            const updatedComments = [...comments];
-            updatedComments.splice(id, 1);
-            oldComments.splice(id,1);
-            setComments(updatedComments);
+function Comments({ text, image, show, setShow, comments, setComments, account, handleDeleteComment, handleEditComment }) {
+    const onDelete = (comment, comments) => {
+        let newComments = handleDeleteComment(comment, comments);
+        console.log("hi");
+        setComments(newComments);
+        setShow(false)
+        if (comments !== undefined) {
+            setShow(true)
         }
-        console.log(comments)
     };
-
-
     return (
         <>
             <div style={{ whiteSpace: 'pre-wrap' }}>{text}</div>
@@ -28,11 +24,14 @@ function Comments({ text, image, oldComments, account }) {
                     <Comment
                         key={index}
                         id={index}
+                        commentId={comment.id}
                         username={comment["username"]}
                         userImg={comment["userImg"]}
                         comment={comment["comment"]}
                         account={account}
                         onDelete={onDelete}
+                        _handleEditComment={handleEditComment}
+                        setComments={setComments}
                     />
                 ))}
             </ul>

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-function Comment({ id, username, userImg, comment, account, onDelete }) {
+function Comment({ id, commentId, username, userImg, comment, account, onDelete, _handleEditComment, setComments }) {
     const [editMode, setEditMode] = useState(false);
     const [editedComment, setEditedComment] = useState(comment);
     const [unEditedComment, setUnEditedComment] = useState(comment);
@@ -11,10 +11,24 @@ function Comment({ id, username, userImg, comment, account, onDelete }) {
 
     const handleSaveEdit = () => {
         // Save the edited comment
-        // You can perform any validation or sanitization here
-        // For simplicity, I'm directly updating the state
+        let commentData = {
+            comment: comment,
+            username: username,
+            userImg: userImg,
+            id: commentId
+        }
+        let editedCommentData = {
+            comment: editedComment,
+            username: username,
+            userImg: userImg,
+            id: commentId
+        }
+        let newComments = _handleEditComment(commentData, editedCommentData)
+        setComments(newComments);
         setUnEditedComment(editedComment);
         setEditMode(false);
+
+        onDelete({comment: null, username: null, userImg: null, id: -1}, newComments);
         // Call an edit function passing the edited comment
     };
     const handleCancelEdit = () => {
@@ -24,8 +38,15 @@ function Comment({ id, username, userImg, comment, account, onDelete }) {
 
     const handleDeleteComment = () => {
         // Call the onDelete function passing the comment id
-        console.log(id);
-        onDelete(id);
+        console.log("id",commentId);
+        let commentData = {
+            comment: comment,
+            username: username,
+            userImg: userImg,
+            id: commentId
+        }
+        console.log(commentData)
+        onDelete(commentData);
     };
 
     return (
