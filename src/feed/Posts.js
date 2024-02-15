@@ -49,6 +49,7 @@ function PostList({ username, userImg, mode }) {
                 time: time,
                 comments: [],
                 image: image,
+                userImg: userImg,
                 username: username,
                 account: username
             }]);
