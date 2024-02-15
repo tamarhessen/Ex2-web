@@ -41,7 +41,7 @@ function PostList({ username, userImg, mode }) {
         let d = new Date();
         let time = d.getDate() + "-" + (d.getMonth() + 1) + "-" + d.getFullYear()
         if (text.trim() !== '' || image) {
-            setPosts([...posts, {
+            setPosts(prevPosts =>[{
                 id: Date.now(),
                 text: text,
                 liked: false,
@@ -52,10 +52,12 @@ function PostList({ username, userImg, mode }) {
                 userImg: userImg,
                 username: username,
                 account: username
-            }]);
+            }, ...prevPosts]);
         }
     };
+    const handleChangePost = (newPost, oldPost) => {
 
+    }
     const handleRemovePost = (id) => {
         setPosts(posts.filter((post) => post.id !== id));
     };
@@ -71,13 +73,22 @@ function PostList({ username, userImg, mode }) {
         const updatedPosts = [...posts];
         const index = updatedPosts.findIndex((post) => post.id === id);
         console.log(posts)
+        let com = updatedPosts[index].comments;
+        let id2 = 0;
+        console.log("hola", com);
+        if (com.length !== 0) {
+            id2 = com[com.length - 1].id + 2;
+        }
         let commentData = {
             comment: comment,
             username: username,
-            userImg: userImg
+            userImg: userImg,
+            id: id2
         }
         updatedPosts[index].comments.push(commentData);
+        console.log(commentData, updatedPosts[index].comments);
         setPosts(updatedPosts);
+        console.log(posts[index]);
     };
 
     const handleEditPost = (id, newText, newImage) => {
@@ -91,6 +102,30 @@ function PostList({ username, userImg, mode }) {
     const handleImageUpload = (image) => {
         setImage(image);
     };
+
+    const handleDeleteComment = (postId, comment, comments) => {
+        if (comments !== undefined || comments != null) {
+            console.log("delete - comments is not null")
+        }
+        else {
+            console.log("comments: ", comments);
+        }
+        const updatedPosts = [...posts];
+        const index = updatedPosts.findIndex((post) => post.id === postId);
+        let filteredComments = updatedPosts[index].comments;
+        if (comment.id !== -1) {
+            console.log("helloooooooo", comment)
+            filteredComments = updatedPosts[index].comments.filter(com => com.id !== comment.id);
+        } else {
+            console.log("helloooooooo");
+            filteredComments = comments;
+        }
+        console.log("idddd", comment.id, filteredComments)
+        updatedPosts[index].comments = filteredComments;
+        setPosts(updatedPosts);
+        console.log(posts[index]);
+        return filteredComments;
+    }
 
     return (
         <>
@@ -107,7 +142,7 @@ function PostList({ username, userImg, mode }) {
                             text={post.text}
                             liked={post.liked}
                             likes={post.likes}
-                            comments={post.comments}
+                            _comments={post.comments}
                             image={post.image}
                             time={post.time}
                             onLike={() => handleLikePost(post.id)}
@@ -116,6 +151,7 @@ function PostList({ username, userImg, mode }) {
                             userImage={post.userImg}
                             account={username}
                             onAddComment={(comment) => handleAddComment(post.id, comment)}
+                            onDeleteComment={(comment, comments) => handleDeleteComment(post.id,comment, comments)}
                             onEdit={(newText, newImg) => handleEditPost(post.id, newText, newImg)}
                             mode={mode}
                         />

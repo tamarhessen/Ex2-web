@@ -19,7 +19,6 @@ function Signup({ handleCloseSignupModal}) {
 
   // Function to reset the form fields
   const resetForm = () => {
-    console.log("reset");
     setUsername('');
     setPassword('');
     setConfirmPassword('');

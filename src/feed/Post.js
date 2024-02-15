@@ -23,7 +23,7 @@ function Share() {
     );
 }
 
-function Post({ id, text, liked, likes, time, comments, image, onLike, onRemove, onAddComment, onEdit, username, userImage, account, mode }) {
+function Post({ id, text, liked, likes, time, _comments, image, onLike, onRemove, onAddComment, onEdit, username, userImage, account, mode, onDeleteComment }) {
     let modeName = "";
     if (mode) {
         modeName = "light-mode"
@@ -35,6 +35,7 @@ function Post({ id, text, liked, likes, time, comments, image, onLike, onRemove,
     const [shiftDown, setShiftDown] = useState(false);
     const [editImg, setEditImg] = useState(image);
     const [show, setShow] = useState(false);
+    const [comments, setComments] = useState(_comments);
     const handleClose = () => setShow(false);
 
     const handleShow = () => { setShow(true) };
@@ -50,7 +51,20 @@ function Post({ id, text, liked, likes, time, comments, image, onLike, onRemove,
         setEditMode(false);
         setEditText(text);
     };
-
+    const handleEditComment = (comment, editedComment) => {
+        let newComments = [];
+        comments.forEach(_comment => {
+            if (_comment.id === comment.id) {
+                console.log("hi", _comment, comment, editedComment);
+                editedComment.id = comment.id;
+                newComments.push(editedComment); // Replace 3 with 300
+            } else {
+                newComments.push(_comment);
+            }
+        });
+        setComments(newComments)
+        return newComments;
+    }
     return (
         <div className={"post-container"}>
             <div className={"header"}>
@@ -150,8 +164,13 @@ function Post({ id, text, liked, likes, time, comments, image, onLike, onRemove,
                         <Comments
                             text={text}
                             image={image}
-                            oldComments={comments}
-                            account={account}></Comments>
+                            comments={comments}
+                            setComments={setComments}
+                            account={account}
+                            show={show}
+                            setShow={setShow}
+                            handleDeleteComment={onDeleteComment}
+                            handleEditComment={handleEditComment}></Comments>
                     </Modal.Body>
                     <Modal.Footer>
                         <AddComment
