@@ -51,6 +51,10 @@ const CommentSchema = new Schema({
         type:String,
         required:true
     },
+    creatorImg: {
+        type: String,
+        required: true
+    },
     content: {
         type: String,
         required: true
@@ -69,6 +73,10 @@ const PostSchema = new Schema({
     Creator: {
         type:String,
         required:true
+    },
+    CreatorImg: {
+        type: String,
+        required: true
     },
     Comments: [{
         type: CommentSchema,

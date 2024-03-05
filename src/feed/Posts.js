@@ -5,69 +5,223 @@ import Post from "./Post";
 import postsData from "./Posts.json";
 import {ModalDialog} from "react-bootstrap";
 
-function PostList({ username, userImg, mode }) {
+function PostList({ username, userImg, mode,token }) {
     const [posts, setPosts] = useState([]);
+    const [likes, setLikes] = useState([]);
     const [image, setImage] = useState(undefined);
     const [shiftDown, setShiftDown] = useState(false);
     const [show, setShow] = useState(false);
     const textRef = useRef("");
     const imgRef = useRef("");
     const staticPosts = JSON.parse(JSON.stringify(postsData))
-
     useEffect(() => {
-        // Load posts from Posts.json
-        setPosts(Object.keys(staticPosts).map((postName, index) => {
-            const post = staticPosts[postName];
-            console.log(post["post-image"])
-            return {
-                id: index + 1,
-                text: post["post-text"],
-                liked: post.liked,
-                likes: post.likes,
-                time: post.time,
-                comments: post.commentsList,
-                image: post["post-image"],
-                username: post.username,
-                userImg: post["user-image"],
-                account: username
-            };
-        }));
+        const fetchUserPosts = async () => {
+            try {
+                const response = await fetch(`http://localhost:5000/api/posts`, {
+                    method: 'get',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + token,
+                    }
+                });
+
+                if (response.ok) {
+                    const posts = await response.json(); 
+                    console.log(posts)
+                    setPosts(posts.map((post, index) => ({
+                        id:post["id"],
+                            text: post["PostText"],
+                            PeopleLiked: post["PeopleLiked"],
+                            likes: post[" PostLikes"],
+                            time: post["created"],
+                            comments: post.commentsList,
+                            image: post["PostImg"],
+                            username: post["Creator"],
+                            userImg: post["CreatorImg"],
+                            account: username
+                       
+                     } )));
+                } else {
+                    console.error('Failed to fetch user posts');
+                }
+            } catch (error) {
+                console.error('Error fetching user posts:', error);
+            }
+        };
+
+        fetchUserPosts();
+    }, [username, token]);
+  // Load liked status and number of likes from localStorage when component mounts
+    useEffect(() => {
+        const savedLikes = JSON.parse(localStorage.getItem('likes')) || {};
+        setPosts(posts => posts.map(post => ({
+            ...post,
+            liked: savedLikes[post.id] ? savedLikes[post.id].liked : false,
+            likes: savedLikes[post.id] ? savedLikes[post.id].likes : post.likes
+        })));
     }, []);
+
+    // Save liked status and number of likes to localStorage whenever posts state changes
+    useEffect(() => {
+        const updatedLikes = {};
+        posts.forEach(post => {
+            updatedLikes[post.id] = { liked: post.liked, likes: post.likes };
+        });
+        localStorage.setItem('likes', JSON.stringify(updatedLikes));
+    }, [posts]);
+    // useEffect(() => {
+    //     // Load posts from Posts.json
+    //     setPosts(Object.keys(staticPosts).map((postName, index) => {
+    //         const post = staticPosts[postName];
+    //         console.log(post["post-image"])
+    //         return {
+    //             id: index + 1,
+    //             text: post["post-text"],
+    //             liked: post.liked,
+    //             likes: post.likes,
+    //             time: post.time,
+    //             comments: post.commentsList,
+    //             image: post["post-image"],
+    //             username: post.username,
+    //             userImg: post["user-image"],
+    //             account: username
+    //         };
+    //     }));
+    // }, []);
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
-    const handleAddPost = (text, image) => {
+    const handleAddPost = async (text, image) => {
         let d = new Date();
-        let time = d.getDate() + "-" + (d.getMonth() + 1) + "-" + d.getFullYear()
-        if (text.trim() !== '' || image) {
-            setPosts(prevPosts =>[{
-                id: Date.now(),
-                text: text,
-                liked: false,
-                likes: 0,
-                time: time,
-                comments: [],
-                image: image,
-                userImg: userImg,
-                username: username,
-                account: username
-            }, ...prevPosts]);
+        let time = d.getDate() + "-" + (d.getMonth() + 1) + "-" + d.getFullYear();
+        let imageData = '';
+        if (image) {
+            // Read the image file using FileReader
+            const reader = new FileReader();
+            
+            reader.onloadend = () => {
+                // Store the base64 string in the imageData variable
+                imageData = reader.result;
+    
+                // Call the API to add the post with the text and base64 image data
+                addPost(text, imageData);
+            };
+            
+            // Convert the image file to base64
+            reader.readAsDataURL(image);
+        } else {
+            // If no image is provided, call the API to add the post without an image
+            addPost(text, '');
         }
     };
+    
+    const addPost = async (text, imageData) => {
+        console.log(imageData);
+        let d = new Date();
+        let time = d.getDate() + "-" + (d.getMonth() + 1) + "-" + d.getFullYear();
+        try {
+            const data = {
+                postText: text,
+                postImg: imageData // Send the base64 image data to the server
+            };
+    
+            const response = await fetch(`http://localhost:5000/api/users/${username}/posts`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + token,
+                },
+                body: JSON.stringify(data)
+            });
+    
+            if (response.ok) {
+                // Post saved successfully, update the state with the new post
+                const newPost = await response.json();
+                setPosts(prevPosts => [{
+                    id: newPost.id,
+                    text: text.trim(),
+                    PeopleLiked: newPost.PeopleLiked,
+                    likes: 0,
+                    time: time,
+                    comments: [],
+                    image: newPost.image,
+                    userImg: userImg,
+                    username: username,
+                    account: username
+                }, ...prevPosts]);
+            } else {
+                // Handle error if saving post fails
+                console.error('Failed to save post');
+            }
+        } catch (error) {
+            console.error('Error saving post:', error);
+        }
+    };
+    
+    
     const handleChangePost = (newPost, oldPost) => {
 
     }
-    const handleRemovePost = (id) => {
-        setPosts(posts.filter((post) => post.id !== id));
+    const handleRemovePost = async (id) => {
+        console.log('Deleting post with id:', id);
+        try {
+            const response = await fetch(`http://localhost:5000/api/users/${username}/posts/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': 'Bearer ' + token,
+                }
+            });
+
+            if (response.ok) {
+                // Remove the post from the state
+                setPosts(posts.filter(post => post.id !== id));
+            } else {
+                console.error('Failed to delete post');
+            }
+        } catch (error) {
+            console.error('Error deleting post:', error);
+        }
+   
     };
 
-    const handleLikePost = (id) => {
+    const handleLikePost = async (id) => {
+    
         const updatedPosts = [...posts];
         const index = updatedPosts.findIndex((post) => post.id === id);
-        updatedPosts[index].liked = !updatedPosts[index].liked;
-        setPosts(updatedPosts);
+        let { liked } = updatedPosts[index];
+    
+        liked = !liked;
+    //     if(liked==false)
+    //     likes=likes-1;
+    // else
+    // likes=likes+1;
+    
+        try {
+            console.log("aa");
+            const response = await fetch(`http://localhost:5000/api/posts/${id}`, {
+                method:'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + token,
+                },
+            });
+    
+            if (response.ok) {
+                const updatedPosts = [...posts];
+                const index = updatedPosts.findIndex((post) => post.id === id);
+                updatedPosts[index].liked = !updatedPosts[index].liked;
+                setPosts(updatedPosts);
+            } else {
+                console.error('Failed to update like status');
+            }
+        } catch (error) {
+            console.error('Error updating like status:', error);
+        }
     };
+    
+    
+   
 
     const handleAddComment = (id, comment) => {
         const updatedPosts = [...posts];
@@ -91,14 +245,38 @@ function PostList({ username, userImg, mode }) {
         console.log(posts[index]);
     };
 
-    const handleEditPost = (id, newText, newImage) => {
+    const handleEditPost = async (id, text, image) => {
         const updatedPosts = [...posts];
         const index = updatedPosts.findIndex((post) => post.id === id);
-        updatedPosts[index].image = newImage;
-        updatedPosts[index].text = newText;
-        setPosts(updatedPosts);
-    };
+        updatedPosts[index].image = image;
+        updatedPosts[index].text = text;
+        console.log("helloooooooo");
+        try {
+            
+            const response = await fetch(`http://localhost:5000/api/users/${username}/posts/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + token,
+                },
+                body: JSON.stringify({
+                    postText: text,
+                    postImg: image
+                })
+            });
+    
+            if (response.ok) {
 
+                setPosts(updatedPosts);
+            } else {
+                // Handle error if updating post fails
+                console.error('Failed to edit post');
+            }
+        } catch (error) {
+            console.error('Error editing post:', error);
+        }
+    };
+    
     const handleImageUpload = (image) => {
         setImage(image);
     };
@@ -140,7 +318,7 @@ function PostList({ username, userImg, mode }) {
                             key={post.id}
                             id={post.id}
                             text={post.text}
-                            liked={post.liked}
+                            PeopleLiked={post.PeopleLiked}
                             likes={post.likes}
                             _comments={post.comments}
                             image={post.image}
@@ -154,6 +332,7 @@ function PostList({ username, userImg, mode }) {
                             onDeleteComment={(comment, comments) => handleDeleteComment(post.id,comment, comments)}
                             onEdit={(newText, newImg) => handleEditPost(post.id, newText, newImg)}
                             mode={mode}
+                            setLikes={setLikes}
                         />
                     ))}
                 </>

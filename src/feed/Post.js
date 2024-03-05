@@ -23,7 +23,8 @@ function Share() {
     );
 }
 
-function Post({ id, text, liked, likes, time, _comments, image, onLike, onRemove, onAddComment, onEdit, username, userImage, account, mode, onDeleteComment }) {
+function Post({ id, text, PeopleLiked, time, _comments, image, onLike, onRemove, onAddComment, onEdit, username, userImage, account, mode, onDeleteComment }) {
+    
     let modeName = "";
     if (mode) {
         modeName = "light-mode"
@@ -37,8 +38,9 @@ function Post({ id, text, liked, likes, time, _comments, image, onLike, onRemove
     const [show, setShow] = useState(false);
     const [comments, setComments] = useState(_comments);
     const handleClose = () => setShow(false);
-
+    const [liked, setLiked] = useState(false); 
     const handleShow = () => { setShow(true) };
+    const [likes,setLikes] = useState(0);
 
     const handleEdit = () => { setEditMode(true); };
 
@@ -65,7 +67,15 @@ function Post({ id, text, liked, likes, time, _comments, image, onLike, onRemove
         setComments(newComments)
         return newComments;
     }
-    return (
+    const handleLike = () => {
+        // Toggle the liked state when the like button is clicked
+        setLiked(!liked);
+        
+        // Call the onLike function to handle the backend logic for liking the post
+        onLike();
+    };
+   
+      return (
         <div className={"post-container"}>
             <div className={"header"}>
                 <div className={"left-header"}>
@@ -118,9 +128,10 @@ function Post({ id, text, liked, likes, time, _comments, image, onLike, onRemove
                 )}
             </div>
             <div style={{display: "flex"}}>
-            <span onClick={onLike} style={{ color: liked ? 'red' : 'black' ,flex: 1}} className={"btn btn-primary"}>
+ <span onClick={handleLike} style={{ color: liked ? 'red' : 'black' ,flex: 1}} className={"btn btn-primary"}>
                 {liked ? '❤️' : '🤍'} {liked ? parseInt(likes)+ 1 : likes}
             </span>
+
             {account === username ? (
                 <>
                     {editMode ? (

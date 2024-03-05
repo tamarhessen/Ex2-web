@@ -10,10 +10,8 @@ function FeedScreen({setLoggedIn}) {
     const [mode, setMode] = useState(true);
     const location = useLocation();
     const { state } = location;
-    
-    const { displayName, profilePicture} = location.state;
-    // Convert file object to URL
-    const profilePictureURL = profilePicture ? URL.createObjectURL(profilePicture) : null;
+    const { displayName, profilePictureURL,token } = state;
+    console.log(token);
 
     return (
         <>
@@ -21,7 +19,7 @@ function FeedScreen({setLoggedIn}) {
             <div className={mode ? "light-mode" : "night-mode"}>
                 {/* Assuming profilePicture is a file object */}
                 {profilePictureURL && <InfoBar setLoggedIn={setLoggedIn} userImg={profilePictureURL}></InfoBar>}
-                <MainScreen setLoggedIn={setLoggedIn} username={displayName} userImg={profilePictureURL} mode={mode} setMode={setMode}></MainScreen>
+                <MainScreen setLoggedIn={setLoggedIn} username={displayName} userImg={profilePictureURL} mode={mode} setMode={setMode} token={token}></MainScreen>
             </div>
         </>
     );

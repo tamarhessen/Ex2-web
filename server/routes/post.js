@@ -42,4 +42,3 @@ router.delete('/api/users/:id/friends/:fid', authenticateToken, postController.d
 
 
 module.exports = router;
-

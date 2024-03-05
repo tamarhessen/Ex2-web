@@ -45,6 +45,13 @@ function Center() {
 }
 
 function RightSide({userImg}) {
+  
+    const navigate = useNavigate();
+
+    const handleProfileClick = () => {
+        // Navigate to the user's profile page
+        navigate("/MyProfilePage");
+    };
     return (
         <>
             <div className="column RightAlign TopBar">
@@ -52,12 +59,15 @@ function RightSide({userImg}) {
                 <span className={"btn"}>Menu</span>
                 <span className={"btn"}>Message</span>
                 <span className={"btn"}>Notifications</span>
-                <img src={userImg} className={"Logo"}></img>
+                <a onClick={handleProfileClick}>
+                <img src={userImg} className={"Logo"} alt="Profile" />
+            </a>
             </div>
         </>
     )
 }
 function InfoBar({userImg,setLoggedIn}) {
+    
     return (
         <>
             <div className="TopBarContainer">

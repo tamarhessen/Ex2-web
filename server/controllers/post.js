@@ -35,7 +35,11 @@ async function getPosts(req, res) {
 }
 
 async function createPost(req, res) {
-    const post = await postService.createPost(req.user.username, req.body.postText, req.body.postImg);
+    let user = await postService.getUserByUsername(req.user.username);
+    let username = user.displayName;
+    let userImg = user.profilePic;
+    console.log(userImg)
+    const post = await postService.createPost(username, userImg, req.body.postText, req.body.postImg);
     if (!post) {
         return res.status(404).json({ error: 'Couldn\'t create a post'})
     }
@@ -113,23 +117,26 @@ async function updateUserById(req, res) {
 
 async function likePost(req, res) {
     let postId = req.params.id;
-    let username = req.body.username;
+    let username = req.user.username;
     const result = await postService.likePost(postId, username);
     res.json(result)
 }
 
 async function createComment(req, res) {
     let postId = req.params.postId;
-    let username = req.params.id;
+    let user = await postService.getUserByUsername(req.user.username);
+    let userImg = user.profilePic;
+    let username = user.displayName;
     let commentText = req.body.text;
-    const result = await postService.createComment(postId, username, commentText);
+    const result = await postService.createComment(postId, username, userImg, commentText);
     res.json(result)
 }
 
 async function editComment(req, res) {
     let postId = req.params.postId;
     let commentId = req.params.commentId;
-    let username = req.params.id;
+    let user = postService.getUserByUsername(req.user.username);
+    let username = user.displayName;
     let commentText = req.body.text;
     const result = await postService.editComment(postId, username, commentText, commentId);
     res.json(result)
