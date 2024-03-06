@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import './MyProfilePage.css'; // Import your profile.css file
 
-function MyProfilePage() {
+function MyProfilePage({username,userImg}) {
+  // Assuming displayName and profilePictureURL are obtained from props or context
+
+
   const [profileData, setProfileData] = useState({
-    username: 'JohnDoe',
-    email: 'johndoe@example.com',
+    username: username,
     location: 'City, Country',
-    profilePicture: 'user-profile-image.jpg', // Replace with the actual path to your profile picture
+    profilePicture: userImg, // Replace with the actual path to your profile picture
     posts: [
       { id: 1, text: 'This is a sample post text.' },
       // Add more posts as needed
@@ -23,7 +25,6 @@ function MyProfilePage() {
       <div className="profile-header">
         <img src={profileData.profilePicture} alt="Profile Image" className="profile-image" />
         <h1>{profileData.username}</h1>
-        <p>Email: {profileData.email}</p>
         <p>Location: {profileData.location}</p>
       </div>
 

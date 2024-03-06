@@ -9,6 +9,7 @@ import { Modal } from 'bootstrap';
 import './Login.css';
 import { authenticateUser } from './Users';
 import {LoggedIn} from "./loggedIn";
+import MyProfilePage from './feed/MyProfilePage';
 
 function App() {
   const [displayName, setDisplayName] = useState(''); 
@@ -20,6 +21,7 @@ function App() {
       <Routes>
         {/* Pass setUsername and setProfilePicture as props */}
         <Route path="/" element={<Login setLoggedIn={setLoggedIn} setDisplayName={setDisplayName} setProfilePicture={setProfilePicture} />} />
+        <Route path="/MyProfilePage" element={<MyProfilePage displayName={displayName} profilePicture={profilePicture}/>} />
           { loggedIn ? (
               <Route path="/feed" element={<FeedScreen setLoggedIn={setLoggedIn} displayName={displayName} profilePicture={profilePicture} />} />
           ) : (

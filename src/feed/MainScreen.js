@@ -10,7 +10,7 @@ function MainScreen({username, userImg, mode, setMode, setLoggedIn,token}) {
             <div className="MainScreen">
                 <LeftSide username={username}></LeftSide>
                 <MainFeedCenter username={username} userImg={userImg} mode={mode} token={token}></MainFeedCenter>
-                <RightSide setLoggedIn={setLoggedIn} mode={mode} setMode={setMode}></RightSide>
+                <RightSide setLoggedIn={setLoggedIn} mode={mode} setMode={setMode}username={username} userImg={userImg}></RightSide>
             </div>
         </>
     )

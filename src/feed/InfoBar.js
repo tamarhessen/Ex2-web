@@ -44,13 +44,13 @@ function Center() {
     )
 }
 
-function RightSide({userImg}) {
-  
+function RightSide({username,userImg}) {
+  console.log(userImg);
     const navigate = useNavigate();
 
     const handleProfileClick = () => {
         // Navigate to the user's profile page
-        navigate("/MyProfilePage");
+        navigate("/MyProfilePage",{ state: {displayName: username, profilePictureURL: userImg   }});
     };
     return (
         <>

@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import AddComment from "./AddComment";
 import Comments from "./Comments";
 import Dropdown from "react-bootstrap/Dropdown";
+import React, { useState, useEffect } from 'react';
+
 
 function Share() {
     return (
@@ -67,6 +69,10 @@ function Post({ id, text, PeopleLiked, time, _comments, image, onLike, onRemove,
         setComments(newComments)
         return newComments;
     }
+    useEffect(() => {
+        // Check if the current user has liked the post
+        setLiked(PeopleLiked.includes(account));
+    }, [PeopleLiked, account]);
     const handleLike = () => {
         // Toggle the liked state when the like button is clicked
         setLiked(!liked);

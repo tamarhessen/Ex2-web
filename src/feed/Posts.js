@@ -248,11 +248,31 @@ function PostList({ username, userImg, mode,token }) {
     const handleEditPost = async (id, text, image) => {
         const updatedPosts = [...posts];
         const index = updatedPosts.findIndex((post) => post.id === id);
-        updatedPosts[index].image = image;
-        updatedPosts[index].text = text;
-        console.log("helloooooooo");
+        let imageData = '';
+    
+        // Check if image is provided
+        if (image) {
+            // Read the image file using FileReader
+            const reader = new FileReader();
+    
+            reader.onloadend = () => {
+                // Store the base64 string in the imageData variable
+                imageData = reader.result;
+    
+                // Call the API to update the post with the new text and base64 image data
+                updatePost(id, text, imageData);
+            };
+    
+            // Convert the image file to base64
+            reader.readAsDataURL(image);
+        } else {
+            // If no image is provided, update the post with only the new text
+            updatePost(id, text, '');
+        }
+    };
+    
+    const updatePost = async (id, text, imageData) => {
         try {
-            
             const response = await fetch(`http://localhost:5000/api/users/${username}/posts/${id}`, {
                 method: 'PUT',
                 headers: {
@@ -261,12 +281,17 @@ function PostList({ username, userImg, mode,token }) {
                 },
                 body: JSON.stringify({
                     postText: text,
-                    postImg: image
+                    postImg: imageData // Send the base64 image data to the server
                 })
             });
     
             if (response.ok) {
-
+                // Post updated successfully, update the state with the updated post
+                const updatedPost = await response.json();
+                const updatedPosts = [...posts];
+                const index = updatedPosts.findIndex((post) => post.id === id);
+                updatedPosts[index].text = text;
+                updatedPosts[index].image = imageData; // Update the image URL in the state
                 setPosts(updatedPosts);
             } else {
                 // Handle error if updating post fails
@@ -276,6 +301,7 @@ function PostList({ username, userImg, mode,token }) {
             console.error('Error editing post:', error);
         }
     };
+    
     
     const handleImageUpload = (image) => {
         setImage(image);
