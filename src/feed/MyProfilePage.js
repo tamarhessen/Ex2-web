@@ -196,6 +196,7 @@ function MyProfilePage() {
       <div className="posts-container">
         <div className="posts">
           <PostList
+          displayName={displayName}
             username={username}
             userImg={userImg}
             mode={mode}
