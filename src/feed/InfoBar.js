@@ -44,13 +44,15 @@ function Center() {
     )
 }
 
-function RightSide({username,userImg}) {
-  console.log(userImg);
+function RightSide({username, userImg, mode,token}) {
+  console.log("ttt"+username);
+  
+  console.log("www"+userImg);
     const navigate = useNavigate();
 
     const handleProfileClick = () => {
         // Navigate to the user's profile page
-        navigate("/MyProfilePage",{ state: {displayName: username, profilePictureURL: userImg   }});
+        navigate("/MyProfilePage",{ state: {username: username, userImg: userImg,token:token   }});
     };
     return (
         <>

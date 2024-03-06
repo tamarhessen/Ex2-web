@@ -14,16 +14,17 @@ import MyProfilePage from './feed/MyProfilePage';
 function App() {
   const [displayName, setDisplayName] = useState(''); 
   const [profilePicture, setProfilePicture] = useState('');
+  const [username, setUsername] = useState('');
   let {loggedIn, setLoggedIn} = LoggedIn();
   let abc = "abc"
   return (
     <Router>
       <Routes>
         {/* Pass setUsername and setProfilePicture as props */}
-        <Route path="/" element={<Login setLoggedIn={setLoggedIn} setDisplayName={setDisplayName} setProfilePicture={setProfilePicture} />} />
-        <Route path="/MyProfilePage" element={<MyProfilePage displayName={displayName} profilePicture={profilePicture}/>} />
+        <Route path="/" element={<Login setLoggedIn={setLoggedIn} setUsername={username}setDisplayName={setDisplayName} setProfilePicture={setProfilePicture} />} />
+        <Route path="/MyProfilePage" element={<MyProfilePage displayName={displayName}username={username} profilePicture={profilePicture}/>} />
           { loggedIn ? (
-              <Route path="/feed" element={<FeedScreen setLoggedIn={setLoggedIn} displayName={displayName} profilePicture={profilePicture} />} />
+              <Route path="/feed" element={<FeedScreen setLoggedIn={setLoggedIn} username={username}displayName={displayName} profilePicture={profilePicture} />} />
           ) : (
               <Route path='/feed' element={<Navigate replace to={"/"}/>} />
           )}

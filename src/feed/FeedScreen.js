@@ -10,16 +10,17 @@ function FeedScreen({setLoggedIn}) {
     const [mode, setMode] = useState(true);
     const location = useLocation();
     const { state } = location;
-    const { displayName, profilePictureURL,token } = state;
+    const { username,displayName, profilePictureURL,token } = state;
     console.log(token);
+    console.log(username+"r");
 
     return (
         <>
             <title>Feed</title>
             <div className={mode ? "light-mode" : "night-mode"}>
                 {/* Assuming profilePicture is a file object */}
-                {profilePictureURL && <InfoBar setLoggedIn={setLoggedIn} userImg={profilePictureURL}></InfoBar>}
-                <MainScreen setLoggedIn={setLoggedIn} username={displayName} userImg={profilePictureURL} mode={mode} setMode={setMode} token={token}></MainScreen>
+                {profilePictureURL && <InfoBar username={username} userImg={profilePictureURL} mode={mode} token={token}></InfoBar>}
+                <MainScreen setLoggedIn={setLoggedIn} username={username} displayName={displayName} userImg={profilePictureURL} mode={mode} setMode={setMode} token={token}></MainScreen>
             </div>
         </>
     );
