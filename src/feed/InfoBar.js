@@ -45,13 +45,17 @@ function Center() {
 }
 
 function RightSide({username, userImg, mode,token}) {
-  console.log("ttt"+username);
-  
-  console.log("www"+userImg);
+    console.log("ttt"+username);
+
+    console.log("www"+userImg);
     const navigate = useNavigate();
 
     const handleProfileClick = () => {
         // Navigate to the user's profile page
+        console.log("hello woadsfsdfdsfafdsfdsfdsrld")
+
+        console.log(username,userImg, token)
+        console.log("hello world")
         navigate("/MyProfilePage",{ state: {username: username, userImg: userImg,token:token   }});
     };
     return (
@@ -68,14 +72,14 @@ function RightSide({username, userImg, mode,token}) {
         </>
     )
 }
-function InfoBar({userImg,setLoggedIn}) {
+function InfoBar({userImg,username, mode, token, setLoggedIn}) {
     
     return (
         <>
             <div className="TopBarContainer">
                 <LeftSide setLoggedIn={setLoggedIn}></LeftSide>
                 <Center></Center>
-                <RightSide userImg={userImg}></RightSide>
+                <RightSide username={username} token={token} mode={mode} userImg={userImg}></RightSide>
             </div>
         </>
     )

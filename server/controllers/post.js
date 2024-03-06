@@ -28,6 +28,7 @@ async function getUserByUsername(req, res) {
 
 async function getPosts(req, res) {
     const posts = await postService.getPosts(req.user.username);
+    console.log("abc", posts)
     if (!posts) {
         return res.status(404).json({ error: 'Posts not found' });
     }

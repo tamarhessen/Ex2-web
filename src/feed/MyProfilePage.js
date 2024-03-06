@@ -13,16 +13,11 @@ console.log(userImg);
 console.log(token);
 
   const [profileData, setProfileData] = useState({
-    username: "aaa",
-    profilePicture:userImg, 
-    // Replace with the actual path to your profile picture
-   
-    posts: [
-      { id: 1, text: 'This is a sample post text.' },
-      // Add more posts as needed
-    ]
+    username: username,
+    profilePicture:userImg,
+    posts: [{ id: 1, text: 'This is a sample post text.' }]
   });
-  
+  console.log("posts", profileData.posts)
   useEffect(() => {
   const fetchUserPosts = async () => {
     try {
@@ -40,11 +35,12 @@ console.log(token);
       }
 
       const postData = await response.json();
+      console.log("adsada", postData)
       setProfileData({
         ...profileData,
         username: username,
         profilePicture: userImg,
-        posts: postData.posts // Assuming the response contains an array of posts
+        posts: postData // Assuming the response contains an array of posts
       });
     } catch (error) {
       console.error('Error fetching user posts:', error);
@@ -64,13 +60,13 @@ console.log(token);
       </div>
 
       <div className="posts">
-        {profileData.posts.map(post => (
+        {(profileData.posts) ? profileData.posts.map(post => (
           <div className="post" key={post.id}>
-            <p className="post-text">{post.text}</p>
+            <p className="post-text">{post.PostText}</p>
             <button className="button like">Like</button>
             <button className="button comment">Comment</button>
           </div>
-        ))}
+        )) : ""}
       </div>
     </div>
   );

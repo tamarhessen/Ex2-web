@@ -42,6 +42,7 @@ const maxFriendPosts = 20;
 const maxNonFriendPosts = 5;
 
 async function getPosts(username) {
+    console.log("fluuu", username);
     const user = await getUserByUsername(username);
     // console.log(user, username)
     let friendsList = user.friends.FriendList;
@@ -73,9 +74,11 @@ async function getPosts(username) {
             }
         }
     })
-    return await Promise.all(posts.map(async (post) => {
+    let result = await Promise.all(posts.map(async (post) => {
         return post
     }));
+    console.log("hiiilokookokoko", result.length);
+    return result
 }
 
 async function createPost(username, userImg, text, img) {
@@ -183,6 +186,7 @@ async function deleteFriend(userId, friendId) {
 }
 
 async function getAllPostsByUserId(userId, realUser) {
+    console.log("flumbper", userId, realUser)
     const user = await User.findOne({username: userId});
     if (!(user.friends.FriendList.includes(realUser) || userId === realUser)) {
         console.log("you aren\'t friends");
