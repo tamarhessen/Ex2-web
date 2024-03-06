@@ -25,7 +25,7 @@ function Share() {
     );
 }
 
-function Post({ id, text, PeopleLiked, time, _comments, image, onLike, onRemove, onAddComment, onEdit, username, userImage, account, mode, onDeleteComment }) {
+function Post({ id, text, PeopleLiked, time, _comments, image, onLike, onRemove, onAddComment,displayName, onEdit, username, userImage, account, mode, onDeleteComment }) {
     
     let modeName = "";
     if (mode) {
@@ -138,7 +138,7 @@ function Post({ id, text, PeopleLiked, time, _comments, image, onLike, onRemove,
                 {liked ? '❤️' : '🤍'} {liked ? parseInt(likes)+ 1 : likes}
             </span>
 
-            {account === username ? (
+            {account === displayName ? (
                 <>
                     {editMode ? (
                         <>

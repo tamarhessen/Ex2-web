@@ -2,7 +2,7 @@
 // import {Posts} from "./Posts.js";
 import PostList from "./Posts";
 import {useState} from "react";
-function MainFeedCenter({username, userImg, mode,token}) {
+function MainFeedCenter({username, displayName,userImg, mode,token}) {
     console.log(token);
     const [postElements, setPostElements] = useState([]);
     console.log(username)
@@ -11,7 +11,7 @@ function MainFeedCenter({username, userImg, mode,token}) {
         {/*<UploadPost username={username}></UploadPost>*/}
         <br/>
             {/*<Posts username={username}></Posts>*/}
-            <PostList username={username} userImg={userImg} mode={mode} token={token}></PostList>
+            <PostList username={username} displayName={displayName}userImg={userImg} mode={mode} token={token}></PostList>
         </div>
     </>);
 }

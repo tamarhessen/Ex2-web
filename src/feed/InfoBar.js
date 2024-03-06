@@ -44,9 +44,9 @@ function Center() {
     )
 }
 
-function RightSide({username, userImg, mode,token}) {
+function RightSide({displayName,username, userImg, mode,token}) {
     console.log("ttt"+username);
-
+    console.log("vvv"+displayName);
     console.log("www"+userImg);
     const navigate = useNavigate();
 
@@ -56,7 +56,7 @@ function RightSide({username, userImg, mode,token}) {
 
         console.log(username,userImg, token)
         console.log("hello world")
-        navigate("/MyProfilePage",{ state: {username: username, userImg: userImg,token:token   }});
+        navigate("/MyProfilePage",{ state: {displayName:displayName,username: username, userImg: userImg,token:token   }});
     };
     return (
         <>

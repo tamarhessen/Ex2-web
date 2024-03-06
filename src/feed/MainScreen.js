@@ -8,8 +8,8 @@ function MainScreen({ setLoggedIn,username, displayName,userImg, mode, setMode,t
     return (
         <>
             <div className="MainScreen">
-                <LeftSide username={username}></LeftSide>
-                <MainFeedCenter username={username} userImg={userImg} mode={mode} token={token}></MainFeedCenter>
+                <LeftSide displayName={displayName}></LeftSide>
+                <MainFeedCenter username={username}displayName={displayName} userImg={userImg} mode={mode} token={token}></MainFeedCenter>
                 <RightSide username={username} userImg={userImg} mode={mode} token={token}></RightSide>
             </div>
         </>

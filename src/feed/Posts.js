@@ -5,7 +5,7 @@ import Post from "./Post";
 import postsData from "./Posts.json";
 import {ModalDialog} from "react-bootstrap";
 
-function PostList({ username, userImg, mode,token }) {
+function PostList({ username,displayName, userImg, mode,token }) {
     const [posts, setPosts] = useState([]);
     const [likes, setLikes] = useState([]);
     const [image, setImage] = useState(undefined);
@@ -38,7 +38,7 @@ function PostList({ username, userImg, mode,token }) {
                             image: post["PostImg"],
                             username: post["Creator"],
                             userImg: post["CreatorImg"],
-                            account: username
+                            account: post["Creator"]
                        
                      } )));
                 } else {
@@ -148,7 +148,7 @@ function PostList({ username, userImg, mode,token }) {
                     image: newPost.image,
                     userImg: userImg,
                     username: username,
-                    account: username
+                    account: newPost.Creator
                 }, ...prevPosts]);
             } else {
                 // Handle error if saving post fails
@@ -331,12 +331,13 @@ function PostList({ username, userImg, mode,token }) {
         return filteredComments;
     }
 
+console.log(username);
     return (
         <>
             <div>
                 <div className={"uploadPost post-container"} onClick={handleShow}>
                     <img src={userImg} className={"Logo"} />
-                    <span>{"What's on your mind " + username + "?"}</span>
+                    <span>{"What's on your mind " + displayName + "?"}</span>
                 </div>
                 <>
                     {posts.map((post) => (
@@ -353,7 +354,7 @@ function PostList({ username, userImg, mode,token }) {
                             onRemove={() => handleRemovePost(post.id)}
                             username={post.username}
                             userImage={post.userImg}
-                            account={username}
+                            account={post.Creator}
                             onAddComment={(comment) => handleAddComment(post.id, comment)}
                             onDeleteComment={(comment, comments) => handleDeleteComment(post.id,comment, comments)}
                             onEdit={(newText, newImg) => handleEditPost(post.id, newText, newImg)}
