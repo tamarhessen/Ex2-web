@@ -69,10 +69,11 @@ function Post({ id, text, PeopleLiked, time, _comments, image, onLike, onRemove,
         setComments(newComments)
         return newComments;
     }
+    console.log(username);
     useEffect(() => {
         // Check if the current user has liked the post
-        setLiked(PeopleLiked.includes(account));
-    }, [PeopleLiked, account]);
+        setLiked(PeopleLiked.includes(username));
+    }, [PeopleLiked, username]);
     const handleLike = () => {
         // Toggle the liked state when the like button is clicked
         setLiked(!liked);
@@ -86,7 +87,7 @@ function Post({ id, text, PeopleLiked, time, _comments, image, onLike, onRemove,
             <div className={"header"}>
                 <div className={"left-header"}>
                     <img src={userImage} className={"Logo"} alt="User logo" />
-                    {username}
+                    {displayName}
                 </div>
                 <div className={"right-header"}>
                     {time}

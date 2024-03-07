@@ -14,6 +14,34 @@ function PostList({ username,displayName, userImg, mode,token }) {
     const textRef = useRef("");
     const imgRef = useRef("");
     const staticPosts = JSON.parse(JSON.stringify(postsData))
+     // Function to fetch user data from the server
+  const fetchUserData = async () => {
+    try {
+      const response = await fetch(`http://localhost:5000/api/users/${username}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + token,
+        },
+      });
+
+      if (response.ok) {
+        const userData = await response.json();
+        console.log('User Data:', userData); // Log the userData object
+
+      displayName=userData.displayName;
+       setImage(userData.profilePic);
+
+        console.log("sssss" + displayName);
+
+      } else {
+        console.error('Failed to fetch user data');
+      }
+    } catch (error) {
+      console.error('Error fetching user data:', error);
+    }
+  };
+  
     useEffect(() => {
         const fetchUserPosts = async () => {
             try {
@@ -36,10 +64,8 @@ function PostList({ username,displayName, userImg, mode,token }) {
                             time: post["created"],
                             comments: post.commentsList,
                             image: post["PostImg"],
-                            username: post["Creator"],
                             userImg: post["CreatorImg"],
                             account: post["Creator"]
-                       
                      } )));
                 } else {
                     console.error('Failed to fetch user posts');
@@ -148,7 +174,7 @@ function PostList({ username,displayName, userImg, mode,token }) {
                     image: newPost.image,
                     userImg: userImg,
                     username: username,
-                    account: newPost.Creator
+                    account: displayName
                 }, ...prevPosts]);
             } else {
                 // Handle error if saving post fails
@@ -352,14 +378,15 @@ console.log(username);
                             time={post.time}
                             onLike={() => handleLikePost(post.id)}
                             onRemove={() => handleRemovePost(post.id)}
-                            username={post.username}
+                            username={username}
                             userImage={post.userImg}
-                            account={post.Creator}
+                            account={post.account}
                             onAddComment={(comment) => handleAddComment(post.id, comment)}
                             onDeleteComment={(comment, comments) => handleDeleteComment(post.id,comment, comments)}
                             onEdit={(newText, newImg) => handleEditPost(post.id, newText, newImg)}
                             mode={mode}
                             setLikes={setLikes}
+                           displayName={displayName}
                         />
                     ))}
                 </>
