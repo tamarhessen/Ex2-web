@@ -5,11 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ce1aa1cd-dc67-4b6e-9365-c94d1d72503a" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/feed/Friends.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/app.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/controllers/post.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/controllers/post.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/services/post.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/services/post.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/feed/InfoBar.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/feed/InfoBar.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/feed/LightModeFeed.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/feed/LightModeFeed.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/feed/MainRight.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/feed/MainRight.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/feed/MyProfilePage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/feed/MyProfilePage.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -142,7 +141,7 @@
       <option name="presentableId" value="Default" />
       <updated>1707991005321</updated>
       <workItem from="1707991006513" duration="14006000" />
-      <workItem from="1709736478572" duration="1960000" />
+      <workItem from="1709736478572" duration="11901000" />
     </task>
     <servers />
   </component>

@@ -188,3 +188,12 @@ html {
 .right-header {
     margin-left: auto;
 }
+
+.name {
+    flex: 5;
+}
+
+.nameBtn {
+    flex: 1;
+    border-radius: 50%;
+}
