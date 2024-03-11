@@ -483,32 +483,36 @@ function MyProfilePage() {
                 <div className="posts">
                     <>
                         <div>
-                            <>
-                                {posts.map((post) => (
-                                    <Post
-                                        key={post.id}
-                                        id={post.id}
-                                        text={post.text}
-                                        PeopleLiked={post.PeopleLiked}
-                                        likes={post.likes}
-                                        _comments={post.comments}
-                                        image={post.image}
-                                        time={post.time}
-                                        onLike={() => handleLikePost(post.id)}
-                                        onRemove={() => handleRemovePost(post.id)}
-                                        username={username}
-                                        userImage={image}
-                                        account={""}
-                                        onAddComment={(comment) => handleAddComment(post.id, comment)}
-                                        onDeleteComment={(comment, comments) => handleDeleteComment(post.id,comment, comments)}
-                                        onEdit={(newText, newImg) => handleEditPost(post.id, newText, newImg)}
-                                        mode={mode}
-                                        setLikes={setLikes}
-                                        displayName={displayName}
-                                        token={token}
-                                    />
-                                ))}
-                            </>
+                            {posts.length === 0 ? (
+                                <p>You are not friends or the user doesn't have any posts.</p>
+                            ) : (
+                                <>
+                                    {posts.map((post) => (
+                                        <Post
+                                            key={post.id}
+                                            id={post.id}
+                                            text={post.text}
+                                            PeopleLiked={post.PeopleLiked}
+                                            likes={post.likes}
+                                            _comments={post.comments}
+                                            image={post.image}
+                                            time={post.time}
+                                            onLike={() => handleLikePost(post.id)}
+                                            onRemove={() => handleRemovePost(post.id)}
+                                            username={username}
+                                            userImage={image}
+                                            account={""}
+                                            onAddComment={(comment) => handleAddComment(post.id, comment)}
+                                            onDeleteComment={(comment, comments) => handleDeleteComment(post.id,comment, comments)}
+                                            onEdit={(newText, newImg) => handleEditPost(post.id, newText, newImg)}
+                                            mode={mode}
+                                            setLikes={setLikes}
+                                            displayName={displayName}
+                                            token={token}
+                                        />
+                                    ))}
+                                </>
+                            )}
                         </div>
                     </>
                 </div>
