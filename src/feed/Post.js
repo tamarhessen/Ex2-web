@@ -5,6 +5,7 @@ import AddComment from "./AddComment";
 import Comments from "./Comments";
 import Dropdown from "react-bootstrap/Dropdown";
 import React, { useState, useEffect } from 'react';
+import {useNavigate} from "react-router-dom";
 
 
 function Share() {
@@ -25,7 +26,7 @@ function Share() {
     );
 }
 
-function Post({ id, text, PeopleLiked, time, _comments, image, onLike, onRemove, onAddComment,displayName, onEdit, username, userImage, account, mode, onDeleteComment }) {
+function Post({ id, text, PeopleLiked, time, _comments, image, onLike, onRemove, onAddComment,displayName, onEdit, username, userImage, account, mode, onDeleteComment, token }) {
     
     let modeName = "";
     if (mode) {
@@ -43,6 +44,7 @@ function Post({ id, text, PeopleLiked, time, _comments, image, onLike, onRemove,
     const [liked, setLiked] = useState(false); 
     const handleShow = () => { setShow(true) };
     const [likes,setLikes] = useState(0);
+    const navigate = useNavigate()
 
     const handleEdit = () => { setEditMode(true); };
 
@@ -81,11 +83,26 @@ function Post({ id, text, PeopleLiked, time, _comments, image, onLike, onRemove,
         // Call the onLike function to handle the backend logic for liking the post
         onLike();
     };
-   
+   const navigateToPage = () => {
+       console.log(account, displayName);
+       if (account === displayName) {
+           navigate("/MyProfilePage", {
+               state: {
+                   displayName: displayName,
+                   username: username,
+                   userImg: userImage,
+                   token: token
+               }
+           });
+       } else {
+           navigate("/FriendPage", {state: {username: displayName, token: token}});
+       }
+
+   }
       return (
         <div className={"post-container"}>
             <div className={"header"}>
-                <div className={"left-header"}>
+                <div className={"left-header"} onClick={navigateToPage}>
                     <img src={userImage} className={"Logo"} alt="User logo" />
                     {displayName}
                 </div>

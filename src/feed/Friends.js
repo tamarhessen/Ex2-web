@@ -1,10 +1,18 @@
 import { useEffect, useState } from "react";
+import {useNavigate} from "react-router-dom";
 
 function Friends({ username, token }) {
     const [userData, setUserData] = useState(null);
     const [error, setError] = useState(null);
     const [FriendsList, setFriendList] = useState([]);
     const [PendingList, setPendingList] = useState([]);
+    const navigate = useNavigate();
+
+    const showFriendPage = (friendName) => {
+
+        navigate("/FriendPage",{ state: {username: friendName,token:token   }});
+        // navigate("/MyProfilePage",{ state: {username:friendName, token:token   }});
+    }
 
     const sendToServer = async (e) => {
         if (e.key === 'Enter') {
@@ -87,7 +95,7 @@ function Friends({ username, token }) {
                 setUserData(json);
                 setFriendList(json.friends.FriendList.map(friend => (
                     <div key={friend} style={{ display: 'flex', alignItems: 'center' }}>
-                        <div className={"name"}>{friend}</div>
+                        <div onClick={() => showFriendPage(friend)} className={"name"}>{friend}</div>
                         <button className={"nameBtn"} onClick={()=> decline(friend)}>x</button>
                     </div>
                 )));

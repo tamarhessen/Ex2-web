@@ -1,51 +1,43 @@
-import React, { useEffect, useRef, useState } from 'react';
-import Modal from "react-bootstrap/Modal";
-import Button from "react-bootstrap/Button";
+import React, { useState, useEffect, useRef } from 'react';
+import './MyProfilePage.css';
+import { useLocation } from 'react-router-dom';
+import PostList from './Posts';
+import Modal from 'react-bootstrap/Modal';
+import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
+import LeftSide from "./MainLeft"
+import MainFeedCenter from "./MainFeedCenter";
+import RightSide from "./MainRight";
 import Post from "./Post";
-import postsData from "./Posts.json";
-import {ModalDialog} from "react-bootstrap";
 
-function PostList({ username,displayName, userImg, mode,token }) {
+
+function MyProfilePage() {
+    const [mode, setMode] = useState(true);
+    const location = useLocation();
+    const { state } = location;
+    const { username, userImg, token } = state;
+    const [pic, setPic] = useState('');
+    const [displayName, setDisplayName] = useState('');
+    const [account, setAccount] = useState('');
+    const [password, setPassword] = useState('');
+    const [realPic, setRealPic] = useState(null);
+    const [showModal, setShowModal] = useState(false);
+    const [showEditWindow, setShowEditWindow] = useState(false);
+    const [editedDisplayName, setEditedDisplayName] = useState('');
+    const [image, setImage] = useState(undefined);
     const [posts, setPosts] = useState([]);
     const [likes, setLikes] = useState([]);
-    const [image, setImage] = useState(undefined);
     const [shiftDown, setShiftDown] = useState(false);
     const [show, setShow] = useState(false);
     const textRef = useRef("");
     const imgRef = useRef("");
-    const staticPosts = JSON.parse(JSON.stringify(postsData))
-     // Function to fetch user data from the server
-  const fetchUserData = async () => {
-    try {
-      const response = await fetch(`http://localhost:5000/api/users/${username}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: 'Bearer ' + token,
-        },
-      });
+    console.log("hellasdasldad", username);
 
-      if (response.ok) {
-        const userData = await response.json();
-        console.log('User Data:', userData); // Log the userData object
-
-      displayName=userData.displayName;
-       setImage(userData.profilePic);
-
-        console.log("sssss" + displayName);
-
-      } else {
-        console.error('Failed to fetch user data');
-      }
-    } catch (error) {
-      console.error('Error fetching user data:', error);
-    }
-  };
-  
+    const modalRef = useRef(null);
     useEffect(() => {
         const fetchUserPosts = async () => {
             try {
-                const response = await fetch(`http://localhost:5000/api/posts`, {
+                const response = await fetch(`http://localhost:5000/api/users/${username}/posts`, {
                     method: 'get',
                     headers: {
                         'Content-Type': 'application/json',
@@ -54,20 +46,20 @@ function PostList({ username,displayName, userImg, mode,token }) {
                 });
 
                 if (response.ok) {
-                    const posts = await response.json(); 
+                    const posts = await response.json();
                     console.log(posts)
                     setPosts(posts.map((post, index) => ({
                         id:post["id"],
-                            text: post["PostText"],
-                            PeopleLiked: post["PeopleLiked"],
-                            likes: post[" PostLikes"],
-                            time: post["created"],
-                            comments: post.commentsList,
-                            image: post["PostImg"],
-                            userImg: post["CreatorImg"],
-                            account: post["Creator"],
-                            token: token
-                     } )));
+                        text: post["PostText"],
+                        PeopleLiked: post["PeopleLiked"],
+                        likes: post[" PostLikes"],
+                        time: post["created"],
+                        comments: post.commentsList,
+                        image: post["PostImg"],
+                        userImg: image,
+                        account:post["Creator"]
+
+                    } )));
                 } else {
                     console.error('Failed to fetch user posts');
                 }
@@ -78,7 +70,7 @@ function PostList({ username,displayName, userImg, mode,token }) {
 
         fetchUserPosts();
     }, [username, token]);
-  // Load liked status and number of likes from localStorage when component mounts
+// Load liked status and number of likes from localStorage when component mounts
     useEffect(() => {
         const savedLikes = JSON.parse(localStorage.getItem('likes')) || {};
         setPosts(posts => posts.map(post => ({
@@ -88,7 +80,7 @@ function PostList({ username,displayName, userImg, mode,token }) {
         })));
     }, []);
 
-    // Save liked status and number of likes to localStorage whenever posts state changes
+// Save liked status and number of likes to localStorage whenever posts state changes
     useEffect(() => {
         const updatedLikes = {};
         posts.forEach(post => {
@@ -96,26 +88,6 @@ function PostList({ username,displayName, userImg, mode,token }) {
         });
         localStorage.setItem('likes', JSON.stringify(updatedLikes));
     }, [posts]);
-    // useEffect(() => {
-    //     // Load posts from Posts.json
-    //     setPosts(Object.keys(staticPosts).map((postName, index) => {
-    //         const post = staticPosts[postName];
-    //         console.log(post["post-image"])
-    //         return {
-    //             id: index + 1,
-    //             text: post["post-text"],
-    //             liked: post.liked,
-    //             likes: post.likes,
-    //             time: post.time,
-    //             comments: post.commentsList,
-    //             image: post["post-image"],
-    //             username: post.username,
-    //             userImg: post["user-image"],
-    //             account: username
-    //         };
-    //     }));
-    // }, []);
-
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
@@ -126,15 +98,15 @@ function PostList({ username,displayName, userImg, mode,token }) {
         if (image) {
             // Read the image file using FileReader
             const reader = new FileReader();
-            
+
             reader.onloadend = () => {
                 // Store the base64 string in the imageData variable
                 imageData = reader.result;
-    
+
                 // Call the API to add the post with the text and base64 image data
                 addPost(text, imageData);
             };
-            
+
             // Convert the image file to base64
             reader.readAsDataURL(image);
         } else {
@@ -142,7 +114,7 @@ function PostList({ username,displayName, userImg, mode,token }) {
             addPost(text, '');
         }
     };
-    
+
     const addPost = async (text, imageData) => {
         console.log(imageData);
         let d = new Date();
@@ -152,7 +124,7 @@ function PostList({ username,displayName, userImg, mode,token }) {
                 postText: text,
                 postImg: imageData // Send the base64 image data to the server
             };
-    
+
             const response = await fetch(`http://localhost:5000/api/users/${username}/posts`, {
                 method: 'POST',
                 headers: {
@@ -161,7 +133,7 @@ function PostList({ username,displayName, userImg, mode,token }) {
                 },
                 body: JSON.stringify(data)
             });
-    
+
             if (response.ok) {
                 // Post saved successfully, update the state with the new post
                 const newPost = await response.json();
@@ -173,9 +145,9 @@ function PostList({ username,displayName, userImg, mode,token }) {
                     time: time,
                     comments: [],
                     image: newPost.image,
-                    userImg: userImg,
+                    userImg: image,
                     username: username,
-                    account: displayName
+                    account: newPost.Creator
                 }, ...prevPosts]);
             } else {
                 // Handle error if saving post fails
@@ -185,8 +157,8 @@ function PostList({ username,displayName, userImg, mode,token }) {
             console.error('Error saving post:', error);
         }
     };
-    
-    
+
+
     const handleChangePost = (newPost, oldPost) => {
 
     }
@@ -209,21 +181,21 @@ function PostList({ username,displayName, userImg, mode,token }) {
         } catch (error) {
             console.error('Error deleting post:', error);
         }
-   
+
     };
 
     const handleLikePost = async (id) => {
-    
+
         const updatedPosts = [...posts];
         const index = updatedPosts.findIndex((post) => post.id === id);
         let { liked } = updatedPosts[index];
-    
+
         liked = !liked;
-    //     if(liked==false)
-    //     likes=likes-1;
-    // else
-    // likes=likes+1;
-    
+//     if(liked==false)
+//     likes=likes-1;
+// else
+// likes=likes+1;
+
         try {
             console.log("aa");
             const response = await fetch(`http://localhost:5000/api/posts/${id}`, {
@@ -233,7 +205,7 @@ function PostList({ username,displayName, userImg, mode,token }) {
                     'Authorization': 'Bearer ' + token,
                 },
             });
-    
+
             if (response.ok) {
                 const updatedPosts = [...posts];
                 const index = updatedPosts.findIndex((post) => post.id === id);
@@ -246,9 +218,9 @@ function PostList({ username,displayName, userImg, mode,token }) {
             console.error('Error updating like status:', error);
         }
     };
-    
-    
-   
+
+
+
 
     const handleAddComment = (id, comment) => {
         const updatedPosts = [...posts];
@@ -276,20 +248,20 @@ function PostList({ username,displayName, userImg, mode,token }) {
         const updatedPosts = [...posts];
         const index = updatedPosts.findIndex((post) => post.id === id);
         let imageData = '';
-    
+
         // Check if image is provided
         if (image) {
             // Read the image file using FileReader
             const reader = new FileReader();
-    
+
             reader.onloadend = () => {
                 // Store the base64 string in the imageData variable
                 imageData = reader.result;
-    
+
                 // Call the API to update the post with the new text and base64 image data
                 updatePost(id, text, imageData);
             };
-    
+
             // Convert the image file to base64
             reader.readAsDataURL(image);
         } else {
@@ -297,7 +269,7 @@ function PostList({ username,displayName, userImg, mode,token }) {
             updatePost(id, text, '');
         }
     };
-    
+
     const updatePost = async (id, text, imageData) => {
         try {
             const response = await fetch(`http://localhost:5000/api/users/${username}/posts/${id}`, {
@@ -311,7 +283,7 @@ function PostList({ username,displayName, userImg, mode,token }) {
                     postImg: imageData // Send the base64 image data to the server
                 })
             });
-    
+
             if (response.ok) {
                 // Post updated successfully, update the state with the updated post
                 const updatedPost = await response.json();
@@ -328,8 +300,8 @@ function PostList({ username,displayName, userImg, mode,token }) {
             console.error('Error editing post:', error);
         }
     };
-    
-    
+
+
     const handleImageUpload = (image) => {
         setImage(image);
     };
@@ -357,107 +329,192 @@ function PostList({ username,displayName, userImg, mode,token }) {
         console.log(posts[index]);
         return filteredComments;
     }
-    posts.map((post) => {
-        console.log(post)
-    })
-console.log("usernameeee", username, displayName);
+    const handleEditProfilePicture = async (image) => {
+        let imageData = '';
+
+        // Check if image is provided
+
+        // Read the image file using FileReader
+        const reader = new FileReader();
+
+        reader.onloadend = () => {
+            // Store the base64 string in the imageData variable
+            imageData = reader.result;
+
+            // Call the function to update the profile picture
+            updateProfilePicture(imageData);
+        };
+
+        // Convert the image file to base64
+        reader.readAsDataURL(image);
+
+    };
+
+    // Function to fetch user data from the server
+    const fetchUserData = async () => {
+        try {
+            const response = await fetch(`http://localhost:5000/api/users/${username}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: 'Bearer ' + token,
+                },
+            });
+
+            if (response.ok) {
+                const userData = await response.json();
+                console.log('User Data:', userData); // Log the userData object
+
+                setDisplayName(userData.displayName); // Set the displayName separately
+                setPassword(userData.password);
+                setImage(userData.profilePic);
+
+                console.log("sssss" + displayName);
+
+            } else {
+                console.error('Failed to fetch user data');
+            }
+        } catch (error) {
+            console.error('Error fetching user data:', error);
+        }
+    };
+
+    useEffect(() => {
+        // Fetch user data when the component mounts
+        fetchUserData();
+    }, []);
+
+    const updateProfilePicture = async (imageData) => {
+        try {
+            const response = await fetch(`http://localhost:5000/api/users/${username}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: 'Bearer ' + token,
+                },
+                body: JSON.stringify({
+                    profilePic: imageData,
+                }),
+            });
+
+            if (response.ok) {
+                setImage(imageData)
+
+                // Update the profile picture in the state
+                await setImage(imageData)
+
+                setShowModal(false); // Close the modal after successful update
+            } else {
+                // Handle error if updating profile picture fails
+                console.error('Failed to update profile picture');
+            }
+        } catch (error) {
+            console.error('Error updating profile picture:', error);
+        }
+    };
+
+    const handleCloseModal = () => {
+        setShowModal(false); // Update the state to close the modal
+    };
+
+    // Handle profile picture selection
+    function showPic(event) {
+        const file = event.target.files[0];
+        setRealPic(file);
+        if (file) {
+            // Convert the selected image to a base64 string
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setPic(reader.result);
+            };
+            reader.readAsDataURL(file);
+        } else {
+            setPic('');
+        }
+    }
+
+    const handleOpenEditWindow = () => {
+        setShowEditWindow(true);
+        setEditedDisplayName(displayName);
+    };
+
+    const handleCloseEditWindow = () => {
+        setShowEditWindow(false);
+    };
+
+    const handleDisplayNameChange = (event) => {
+        setEditedDisplayName(event.target.value);
+    };
+
+    const handleSaveDisplayName = async() => {
+        try {
+            const response = await fetch(`http://localhost:5000/api/users/${username}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: 'Bearer ' + token,
+                },
+                body: JSON.stringify({
+                    displayName: editedDisplayName,
+                }),
+            });
+            console.log("response", response)
+            if (response.ok) {
+                // Update the display name in the state
+                setDisplayName(editedDisplayName);
+                setAccount(editedDisplayName);
+                setShowEditWindow(false);
+            } else {
+                console.error('Failed to update display name');
+            }
+        } catch (error) {
+            console.error('Error updating display name:', error);
+        }
+    };
+    const [key, setKey] = useState(0);
+
+    useEffect(() => {
+        // Update key whenever any of the props change
+        setKey(prevKey => prevKey + 1);
+    }, [displayName, username, userImg, mode, token]);
+
     return (
-        <>
-            <div>
-                <div className={"uploadPost post-container"} onClick={handleShow}>
-                    <img src={userImg} className={"Logo"} />
-                    <span>{"What's on your mind " + displayName + "?"}</span>
+        <div className="container">
+            <div className="posts-container">
+                <div className="posts">
+                    <>
+                        <div>
+                            <>
+                                {posts.map((post) => (
+                                    <Post
+                                        key={post.id}
+                                        id={post.id}
+                                        text={post.text}
+                                        PeopleLiked={post.PeopleLiked}
+                                        likes={post.likes}
+                                        _comments={post.comments}
+                                        image={post.image}
+                                        time={post.time}
+                                        onLike={() => handleLikePost(post.id)}
+                                        onRemove={() => handleRemovePost(post.id)}
+                                        username={username}
+                                        userImage={image}
+                                        account={""}
+                                        onAddComment={(comment) => handleAddComment(post.id, comment)}
+                                        onDeleteComment={(comment, comments) => handleDeleteComment(post.id,comment, comments)}
+                                        onEdit={(newText, newImg) => handleEditPost(post.id, newText, newImg)}
+                                        mode={mode}
+                                        setLikes={setLikes}
+                                        displayName={displayName}
+                                        token={token}
+                                    />
+                                ))}
+                            </>
+                        </div>
+                    </>
                 </div>
-                <>
-                    {posts.map((post) => (
-                        <Post
-                            key={post.id}
-                            id={post.id}
-                            text={post.text}
-                            PeopleLiked={post.PeopleLiked}
-                            likes={post.likes}
-                            _comments={post.comments}
-                            image={post.image}
-                            time={post.time}
-                            onLike={() => handleLikePost(post.id)}
-                            onRemove={() => handleRemovePost(post.id)}
-                            username={username}
-                            userImage={post.userImg}
-                            account={displayName}
-                            onAddComment={(comment) => handleAddComment(post.id, comment)}
-                            onDeleteComment={(comment, comments) => handleDeleteComment(post.id,comment, comments)}
-                            onEdit={(newText, newImg) => handleEditPost(post.id, newText, newImg)}
-                            mode={mode}
-                            setLikes={setLikes}
-                           displayName={post.account}
-                            token={token}
-                        />
-                    ))}
-                </>
             </div>
-            <Modal show={show} onHide={handleClose}>
-                <div className={mode ? "light-mode" : "night-mode"}>
-                    <Modal.Header closeButton>
-                        <Modal.Title>Add post</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-                        <>
-                        <textarea
-                            ref={textRef}
-                            // type="text-box"
-                            placeholder={"What's on your mind " + username + "?"}
-                            className={"input"}
-                            // className={"input"}
-                            onKeyDown={(e) => {
-                                if (e.key === 'Enter' && !shiftDown) {
-                                    const text = e.target.value;
-                                    const image = e.target.nextElementSibling.files[0];
-                                    handleAddPost(text, image);
-                                    handleImageUpload('');
-                                    handleClose()
-                                    e.target.value = '';
-                                    e.target.nextElementSibling.value = '';
-                                } else if (e.key === 'Shift') {
-                                    setShiftDown(true)
-                                }
-                            }}
-                            onKeyUp={(e) => {
-                                if (e.key === 'Shift') {
-                                    setShiftDown(false)
-                                }
-                            }}
-                        />
-                            <input
-                                ref={imgRef}
-                                id={"imageInput"}
-                                type="file"
-                                accept="image/*"
-                                onChange={(e) => {
-                                    const image = e.target.files[0];
-                                    handleImageUpload(image);
-                                }}
-                            />
-                            {image && <img src={URL.createObjectURL(image)} alt="Preview" className={"image"} />}
-                        </>
-                    </Modal.Body>
-                    <Modal.Footer>
-                        <Button variant="secondary" onClick={handleClose}>
-                            Cancel
-                        </Button>
-                        <Button variant="primary" onClick={() => {
-                            const text = textRef.current.value;
-                            const image = imgRef.current.files[0];
-                            handleAddPost(text, image);
-                            handleImageUpload('');
-                            handleClose()
-                        }}>
-                            Add Post
-                        </Button>
-                    </Modal.Footer>
-                </div>
-            </Modal>
-        </>
+        </div>
     );
 }
-
-export default PostList;
+export default MyProfilePage;

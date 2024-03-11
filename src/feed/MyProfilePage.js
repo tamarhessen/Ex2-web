@@ -401,6 +401,8 @@ const handleDeleteComment = (postId, comment, comments) => {
         setImage(imageData)
 
         // Update the profile picture in the state
+        await setImage(imageData)
+
         setShowModal(false); // Close the modal after successful update
       } else {
         // Handle error if updating profile picture fails
@@ -456,7 +458,7 @@ const handleDeleteComment = (postId, comment, comments) => {
           displayName: editedDisplayName,
         }),
       });
-
+      console.log("response", response)
       if (response.ok) {
         // Update the display name in the state
         setDisplayName(editedDisplayName);
@@ -469,6 +471,12 @@ const handleDeleteComment = (postId, comment, comments) => {
       console.error('Error updating display name:', error);
     }
   };
+  const [key, setKey] = useState(0);
+
+  useEffect(() => {
+    // Update key whenever any of the props change
+    setKey(prevKey => prevKey + 1);
+  }, [displayName, username, userImg, mode, token]);
 
   return (
     <div className="container">
@@ -530,7 +538,7 @@ const handleDeleteComment = (postId, comment, comments) => {
                             mode={mode}
                             setLikes={setLikes}
                             displayName={displayName}
-                         
+                            token={token}
                         />
                     ))}
                 </>

@@ -10,6 +10,7 @@ import './Login.css';
 import { authenticateUser } from './Users';
 import {LoggedIn} from "./loggedIn";
 import MyProfilePage from './feed/MyProfilePage';
+import FriendPage from "./feed/FriendPage";
 
 function App() {
   const [displayName, setDisplayName] = useState(''); 
@@ -22,8 +23,17 @@ function App() {
       <Routes>
         {/* Pass setUsername and setProfilePicture as props */}
         <Route path="/" element={<Login setLoggedIn={setLoggedIn} setUsername={username}setDisplayName={setDisplayName} setProfilePicture={setProfilePicture} />} />
+        { loggedIn ? (
         <Route path="/MyProfilePage" element={<MyProfilePage displayName={displayName}username={username} profilePicture={profilePicture}/>} />
-          { loggedIn ? (
+        ) : (
+            <Route path='/MyProfilePage' element={<Navigate replace to={"/"}/>} />
+        )}
+        { loggedIn ? (
+        <Route path="/FriendPage" element={<FriendPage/>} />
+          ) : (
+          <Route path='/FriendPage' element={<Navigate replace to={"/"}/>} />
+          )}
+        { loggedIn ? (
               <Route path="/feed" element={<FeedScreen setLoggedIn={setLoggedIn} username={username}displayName={displayName} profilePicture={profilePicture} />} />
           ) : (
               <Route path='/feed' element={<Navigate replace to={"/"}/>} />
