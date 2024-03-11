@@ -44,7 +44,6 @@ function MyProfilePage() {
                         'Authorization': 'Bearer ' + token,
                     }
                 });
-
                 if (response.ok) {
                     const posts = await response.json();
                     console.log(posts)

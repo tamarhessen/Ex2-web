@@ -66,6 +66,7 @@ function PostList({ username,displayName, userImg, mode,token }) {
                             image: post["PostImg"],
                             userImg: post["CreatorImg"],
                             account: post["Creator"],
+                            creatorUsername: post["CreatorUsername"],
                             token: token
                      } )));
                 } else {
@@ -175,7 +176,8 @@ function PostList({ username,displayName, userImg, mode,token }) {
                     image: newPost.image,
                     userImg: userImg,
                     username: username,
-                    account: displayName
+                    account: displayName,
+                    creatorUsername: username
                 }, ...prevPosts]);
             } else {
                 // Handle error if saving post fails
@@ -390,6 +392,7 @@ console.log("usernameeee", username, displayName);
                             mode={mode}
                             setLikes={setLikes}
                            displayName={post.account}
+                            creatorUsername={post.creatorUsername}
                             token={token}
                         />
                     ))}

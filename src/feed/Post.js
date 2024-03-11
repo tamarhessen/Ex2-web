@@ -26,7 +26,7 @@ function Share() {
     );
 }
 
-function Post({ id, text, PeopleLiked, time, _comments, image, onLike, onRemove, onAddComment,displayName, onEdit, username, userImage, account, mode, onDeleteComment, token }) {
+function Post({ id, text, PeopleLiked, time, _comments, image, onLike, onRemove, onAddComment,displayName, onEdit, username, userImage, account, mode, onDeleteComment, token, creatorUsername }) {
     
     let modeName = "";
     if (mode) {
@@ -84,7 +84,7 @@ function Post({ id, text, PeopleLiked, time, _comments, image, onLike, onRemove,
         onLike();
     };
    const navigateToPage = () => {
-       console.log(account, displayName);
+       console.log(account, displayName, creatorUsername);
        if (account === displayName) {
            navigate("/MyProfilePage", {
                state: {
@@ -95,7 +95,7 @@ function Post({ id, text, PeopleLiked, time, _comments, image, onLike, onRemove,
                }
            });
        } else {
-           navigate("/FriendPage", {state: {username: displayName, token: token}});
+           navigate("/FriendPage", {state: {username: creatorUsername, token: token}});
        }
 
    }
