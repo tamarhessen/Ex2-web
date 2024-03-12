@@ -25,6 +25,7 @@ function MyProfilePage() {
   const [showEditWindow, setShowEditWindow] = useState(false);
   const [editedDisplayName, setEditedDisplayName] = useState('');
   const [image, setImage] = useState(undefined);
+  const [postImg, setPostImg] = useState(undefined);
   const [posts, setPosts] = useState([]);
   const [likes, setLikes] = useState([]);
   const [shiftDown, setShiftDown] = useState(false);
@@ -131,16 +132,16 @@ useEffect(() => {
 const handleClose = () => setShow(false);
 const handleShow = () => setShow(true);
 
-    const handleAddPost = async (text, image) => {
-        console.log("asגשדגשדגשדגשדגשגשדג")
+    const handleAddPost = async (text, image2) => {
+        console.log("asגשדגשדגשדגשדגשגשדג", text, image2);
         let d = new Date();
         let time = d.getDate() + "-" + (d.getMonth() + 1) + "-" + d.getFullYear();
         let imageData = '';
 
         try {
-            if (image) {
+            if (image2) {
                 // Compress the image before uploading
-                const compressedImage = await resizeImage(image);
+                const compressedImage = await resizeImage(image2);
                 // Convert the compressed image blob to base64
                 const reader = new FileReader();
                 reader.readAsDataURL(compressedImage);
@@ -149,6 +150,7 @@ const handleShow = () => setShow(true);
                     imageData = reader.result;
                     // Call the API to add the post with the text and base64 image data
                     console.log("aloha")
+                    console.log(text, imageData);
                     addPost(text, imageData);
                 };
             } else {
@@ -164,6 +166,9 @@ const handleShow = () => setShow(true);
 
 
 const addPost = async (text, imageData) => {
+    if (!text && !imageData) {
+        return
+    }
     console.log(imageData);
     let d = new Date();
     let time = d.getDate() + "-" + (d.getMonth() + 1) + "-" + d.getFullYear();
@@ -192,7 +197,7 @@ const addPost = async (text, imageData) => {
                 likes: 0,
                 time: time,
                 comments: [],
-                image: newPost.image,
+                image: postImg,
                 userImg: image,
                 username: username,
                 account: newPost.Creator 
@@ -352,8 +357,10 @@ const handleAddComment = (id, comment) => {
 };
 
 
-const handleImageUpload = (image) => {
-    setImage(image);
+const handleImageUpload = (postImg) => {
+    console.log(postImg);
+    console.log()
+    setPostImg(postImg);
 };
 
 const handleDeleteComment = (postId, comment, comments) => {
@@ -434,7 +441,7 @@ const handleDeleteComment = (postId, comment, comments) => {
     fetchUserData();
   }, []);
 
-  const updateProfilePicture = async (imageData) => {
+  const updateProfilePicture = async (imageData2) => {
     try {
       const response = await fetch(`http://localhost:5000/api/users/${username}`, {
         method: 'PUT',
@@ -443,15 +450,15 @@ const handleDeleteComment = (postId, comment, comments) => {
           Authorization: 'Bearer ' + token,
         },
         body: JSON.stringify({
-          profilePic: imageData,
+          profilePic: imageData2,
         }),
       });
 
       if (response.ok) {
-        setImage(imageData)
+        setImage(imageData2)
 
         // Update the profile picture in the state
-        await setImage(imageData)
+        await setImage(imageData2)
 
         setShowModal(false); // Close the modal after successful update
       } else {
@@ -642,11 +649,11 @@ const handleDeleteComment = (postId, comment, comments) => {
                                 type="file"
                                 accept="image/*"
                                 onChange={(e) => {
-                                    const image = e.target.files[0];
-                                    handleImageUpload(image);
+                                    const image3 = e.target.files[0];
+                                    handleImageUpload(image3);
                                 }}
                             />
-                            {image && <img src={image} alt="Preview" className={"image"} />}
+                            {postImg && <img src={URL.createObjectURL(postImg)} alt="Preview" className={"image"} />}
                         </>
                     </Modal.Body>
                     <Modal.Footer>
