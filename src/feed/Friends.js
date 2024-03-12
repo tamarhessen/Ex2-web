@@ -41,7 +41,7 @@ function Friends({ username, token }) {
                 setFriendList(friendListWithProfilePic);
                 setPendingList(json.friends.PendingList.map(pending => (
                     <div key={pending} style={{ display: 'flex', alignItems: 'center' }}>
-                        <div onClick={() => showFriendPage(pending, false)} className={"name"}>{pending}</div>
+                        <div onClick={() => showFriendPage(pending, false)} className={"FriendProfile"}>{pending}</div>
                         <button className={"nameBtn"} onClick={() => accept(pending)}>v</button>
                         <button className={"nameBtn"} onClick={() => decline(pending)}>x</button>
                     </div>
@@ -166,17 +166,21 @@ function Friends({ username, token }) {
             <input className={"search"} placeholder="Find friends" onKeyPress={sendToServer}></input>
             <h3>Friends</h3>
             {FriendsList.length > 0 ? (FriendsList.map(friend => (
-                <div onClick={() => showFriendPage(friend.username, true, friend.profilePic)} key={friend.username} style={{ display: 'flex', alignItems: 'center' }}>
+                <div key={friend.username} style={{ display: 'flex', alignItems: 'center' }}>
+                    <div className={"FriendProfile"} onClick={() => showFriendPage(friend.username, true, friend.profilePic)}>
                     <img src={friend.profilePic} alt={`${friend.username}'s Profile`} style={{ width: '50px', height: '50px', borderRadius: '50%', marginRight: '10px' }} />
                     <div className={"name"}>{friend.username}</div>
+                    </div>
                     <button className={"nameBtn"} onClick={() => decline(friend.username)}>x</button>
                 </div>
             ))) : (<p>No friends</p>)}
             <h3>Pending</h3>
             {PendingList.length > 0 ? (PendingList.map(friend => (
-                <div onClick={() => showFriendPage(friend.username, false, friend.profilePic)} key={friend.username} style={{ display: 'flex', alignItems: 'center' }}>
+                <div key={friend.username} style={{ display: 'flex', alignItems: 'center' }}>
+                    <div className={"FriendProfile"} onClick={() => showFriendPage(friend.username, false, friend.profilePic)}>
                     <img src={friend.profilePic} alt={`${friend.username}'s Profile`} style={{ width: '50px', height: '50px', borderRadius: '50%', marginRight: '10px' }} />
                     <div className={"name"}>{friend.username}</div>
+                    </div>
                     <button className={"nameBtn"} onClick={() => accept(friend.username, friend.profilePic)}>v</button>
                     <button className={"nameBtn"} onClick={() => decline(friend.username)}>x</button>
                 </div>
