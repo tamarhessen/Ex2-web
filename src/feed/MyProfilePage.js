@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './MyProfilePage.css';
-import { useLocation } from 'react-router-dom';
+import {useLocation, useNavigate} from 'react-router-dom';
 import PostList from './Posts';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
@@ -31,6 +31,7 @@ function MyProfilePage() {
   const [show, setShow] = useState(false);
   const textRef = useRef("");
   const imgRef = useRef("");
+  const navigate = useNavigate();
   
 
   const modalRef = useRef(null);
@@ -477,7 +478,17 @@ const handleDeleteComment = (postId, comment, comments) => {
     // Update key whenever any of the props change
     setKey(prevKey => prevKey + 1);
   }, [displayName, username, userImg, mode, token]);
-
+    const handleDelete = async () => {
+        const response = await fetch(`http://localhost:5000/api/users/${username}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: 'Bearer ' + token,
+            },
+        })
+        console.log(response)
+        navigate("/");
+    }
   return (
     <div className="container">
       <div className="profile-details">
@@ -503,6 +514,7 @@ const handleDeleteComment = (postId, comment, comments) => {
             <div>
               <h1>{displayName}</h1>
               <button onClick={handleOpenEditWindow}>Edit Display name</button>
+                <button onClick={handleDelete} className={"btn btn-danger"}>Delete user</button>
             </div>
           )}
         </div>
