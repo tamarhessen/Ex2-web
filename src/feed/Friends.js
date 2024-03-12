@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function Friends({ username, token }) {
     const [userData, setUserData] = useState(null);
@@ -8,74 +8,8 @@ function Friends({ username, token }) {
     const [PendingList, setPendingList] = useState([]);
     const navigate = useNavigate();
 
-    const showFriendPage = (friendName) => {
-
-        navigate("/FriendPage",{ state: {username: friendName,token:token   }});
-        // navigate("/MyProfilePage",{ state: {username:friendName, token:token   }});
-    }
-
-    const sendToServer = async (e) => {
-        if (e.key === 'Enter') {
-            console.log(e.target.value);
-            let friend = e.target.value;
-            const res = await fetch('http://localhost:5000/api/Users/' + friend + "/friends", {
-                method: 'post',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'authorization': "bearer " + token,
-                }
-            });
-            const data = await res.json();
-            if (data === null) {
-                console.log("error");
-            } else {
-                setFriendList(data.FriendList);
-                setPendingList(data.PendingList);
-                e.target.value = ''; // Clear the input field
-            }
-        }
-    }
-
-    const accept = async (friendName) => {
-        const res = await fetch('http://localhost:5000/api/Users/' + username + "/friends/" + friendName, {
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json',
-                'authorization': "bearer " + token,
-            }
-        });
-        const data = await res.json();
-        if (data === null) {
-            console.log("error");
-        } else {
-            setFriendList(data.FriendList);
-            setPendingList(data.PendingList);
-        }
-        // Logic to accept friend request
-        console.log("Accepted:", friendName);
-    };
-
-    const decline = async (friendName) => {
-        const res = await fetch('http://localhost:5000/api/Users/' + username + "/friends/" + friendName, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-                'authorization': "bearer " + token,
-            }
-        });
-        const data = await res.json();
-        if (data === null) {
-            console.log("error");
-        } else {
-            // Check if the friend is in the FriendsList, if so, remove it
-            if (FriendsList.includes(friendName)) {
-                const updatedFriendsList = FriendsList.filter(friend => friend !== friendName);
-                setFriendList(updatedFriendsList);
-            }
-            setPendingList(data.PendingList);
-        }
-        // Logic to decline friend request or remove a friend
-        console.log("Declined:", friendName);
+    const showFriendPage = (friendName, isFriend, profilePic) => {
+        navigate("/FriendPage", { state: { username: friendName, token: token, _isFriend: isFriend, profilePic: profilePic } });
     };
 
     useEffect(() => {
@@ -93,15 +27,21 @@ function Friends({ username, token }) {
                 }
                 const json = await res.json();
                 setUserData(json);
-                setFriendList(json.friends.FriendList.map(friend => (
-                    <div key={friend} style={{ display: 'flex', alignItems: 'center' }}>
-                        <div onClick={() => showFriendPage(friend)} className={"name"}>{friend}</div>
-                        <button className={"nameBtn"} onClick={()=> decline(friend)}>x</button>
-                    </div>
-                )));
+                const friendListWithProfilePic = await Promise.all(json.friends.FriendList.map(async (friend) => {
+                    const profileRes = await fetch(`http://localhost:5000/api/Users/${friend}`, {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'authorization': "bearer " + token,
+                        }
+                    });
+                    const profileJson = await profileRes.json();
+                    return { username: friend, profilePic: profileJson.profilePic };
+                }));
+                setFriendList(friendListWithProfilePic);
                 setPendingList(json.friends.PendingList.map(pending => (
                     <div key={pending} style={{ display: 'flex', alignItems: 'center' }}>
-                        <div className={"name"}>{pending}</div>
+                        <div onClick={() => showFriendPage(pending, false)} className={"name"}>{pending}</div>
                         <button className={"nameBtn"} onClick={() => accept(pending)}>v</button>
                         <button className={"nameBtn"} onClick={() => decline(pending)}>x</button>
                     </div>
@@ -112,7 +52,88 @@ function Friends({ username, token }) {
         }
 
         fetchData();
-    }, [username, token, FriendsList]); // Added FriendsList to dependency array to trigger useEffect when FriendsList changes
+    }, [username, token]);
+    useEffect(() => {
+        async function fetchData() {
+            try {
+                const res = await fetch('http://localhost:5000/api/Users/' + username, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'authorization': "bearer " + token,
+                    }
+                });
+                if (!res.ok) {
+                    throw new Error('Failed to fetch user data');
+                }
+                const json = await res.json();
+                setUserData(json);
+
+                // Fetch profile pictures for pending friends
+                const pendingListWithProfilePic = await Promise.all(json.friends.PendingList.map(async (pending) => {
+                    const profileRes = await fetch(`http://localhost:5000/api/Users/${pending}`, {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'authorization': "bearer " + token,
+                        }
+                    });
+                    const profileJson = await profileRes.json();
+                    return { username: pending, profilePic: profileJson.profilePic };
+                }));
+                setPendingList(pendingListWithProfilePic);
+            } catch (error) {
+                setError(error.message);
+            }
+        }
+
+        fetchData();
+    }, [username, token]);
+
+    const accept = async (friendName, friendImg) => {
+        const res = await fetch('http://localhost:5000/api/Users/' + username + "/friends/" + friendName, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+                'authorization': "bearer " + token,
+            }
+        });
+        const data = await res.json();
+        if (data === null) {
+            console.log("error");
+        } else {
+            // Update FriendList with the new friend including profile picture
+            const updatedFriendList = [...FriendsList, { username: friendName, profilePic: friendImg }];
+            setFriendList(updatedFriendList);
+            setPendingList(data.PendingList);
+        }
+        // Logic to accept friend request
+        console.log("Accepted:", friendName);
+    };
+
+
+
+    const decline = async (friendName) => {
+        const res = await fetch('http://localhost:5000/api/Users/' + username + "/friends/" + friendName, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'authorization': "bearer " + token,
+            }
+        });
+        const data = await res.json();
+        if (data === null) {
+            console.log("error");
+        } else {
+            // Check if the friend is in the FriendsList, if so, remove it
+            const updatedFriendsList = FriendsList.filter(friend => friend["username"] !== friendName);
+            console.log(updatedFriendsList, friendName)
+            setFriendList(updatedFriendsList);
+            setPendingList(data.PendingList);
+        }
+        // Logic to decline friend request or remove a friend
+        console.log("Declined:", friendName);
+    };
 
     if (error) {
         return <div>Error: {error}</div>;
@@ -121,14 +142,45 @@ function Friends({ username, token }) {
     if (!userData) {
         return <div>Loading...</div>;
     }
-
+    const sendToServer = async (e) => {
+        if (e.key === 'Enter') {
+            console.log(e.target.value);
+            let friend = e.target.value;
+            const res = await fetch('http://localhost:5000/api/Users/' + friend + "/friends", {
+                method: 'post',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'authorization': "bearer " + token,
+                }
+            });
+            const data = await res.json();
+            if (data === null) {
+                console.log("error");
+            } else {
+                e.target.value = ''; // Clear the input field
+            }
+        }
+    }
     return (
         <div>
             <input className={"search"} placeholder="Find friends" onKeyPress={sendToServer}></input>
             <h3>Friends</h3>
-            {FriendsList.length > 0 ? FriendsList : <p>No friends</p>}
+            {FriendsList.length > 0 ? (FriendsList.map(friend => (
+                <div onClick={() => showFriendPage(friend.username, true, friend.profilePic)} key={friend.username} style={{ display: 'flex', alignItems: 'center' }}>
+                    <img src={friend.profilePic} alt={`${friend.username}'s Profile`} style={{ width: '50px', height: '50px', borderRadius: '50%', marginRight: '10px' }} />
+                    <div className={"name"}>{friend.username}</div>
+                    <button className={"nameBtn"} onClick={() => decline(friend.username)}>x</button>
+                </div>
+            ))) : (<p>No friends</p>)}
             <h3>Pending</h3>
-            {PendingList.length > 0 ? PendingList : <p>No pending requests</p>}
+            {PendingList.length > 0 ? (PendingList.map(friend => (
+                <div onClick={() => showFriendPage(friend.username, false, friend.profilePic)} key={friend.username} style={{ display: 'flex', alignItems: 'center' }}>
+                    <img src={friend.profilePic} alt={`${friend.username}'s Profile`} style={{ width: '50px', height: '50px', borderRadius: '50%', marginRight: '10px' }} />
+                    <div className={"name"}>{friend.username}</div>
+                    <button className={"nameBtn"} onClick={() => accept(friend.username, friend.profilePic)}>v</button>
+                    <button className={"nameBtn"} onClick={() => decline(friend.username)}>x</button>
+                </div>
+            ))) : <p>No pending requests</p>}
         </div>
     );
 }

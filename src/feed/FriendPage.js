@@ -11,11 +11,11 @@ import RightSide from "./MainRight";
 import Post from "./Post";
 
 
-function MyProfilePage() {
+function FriendPage() {
     const [mode, setMode] = useState(true);
     const location = useLocation();
     const { state } = location;
-    const { username, userImg, token } = state;
+    const { username, token, _isFriend } = state;
     const [pic, setPic] = useState('');
     const [displayName, setDisplayName] = useState('');
     const [account, setAccount] = useState('');
@@ -31,7 +31,8 @@ function MyProfilePage() {
     const [show, setShow] = useState(false);
     const textRef = useRef("");
     const imgRef = useRef("");
-    console.log("hellasdasldad", username);
+    const [isFriend, setIsFriend] = useState(_isFriend);
+    console.log("hellasdasldad", username, isFriend);
 
     const modalRef = useRef(null);
     useEffect(() => {
@@ -234,7 +235,7 @@ function MyProfilePage() {
         let commentData = {
             comment: comment,
             username: username,
-            userImg: userImg,
+            userImg: image,
             id: id2
         }
         updatedPosts[index].comments.push(commentData);
@@ -475,10 +476,46 @@ function MyProfilePage() {
     useEffect(() => {
         // Update key whenever any of the props change
         setKey(prevKey => prevKey + 1);
-    }, [displayName, username, userImg, mode, token]);
+    }, [displayName, username, image, mode, token]);
+
+    const sendToServer = async (friend) => {
+        const res = await fetch('http://localhost:5000/api/Users/' + friend + "/friends", {
+            method: 'post',
+            headers: {
+                'Content-Type': 'application/json',
+                'authorization': "bearer " + token,
+            }
+        });
+        const data = await res.json();
+        if (data === null) {
+            console.log("error");
+        }
+        setIsFriend(true)
+    }
 
     return (
         <div className="container">
+            <div className="profile-details">
+                <div className="profile-header">
+                    <img
+                        src={image}
+                        alt="Profile Image"
+                        className={"Logo profile-image"}
+                        onClick={() => setShowModal(true)}
+                        style={{ width: "100%", height: "20%" }}
+                    />
+                    <div>
+                        {username}
+                    </div>
+                    {isFriend ? (
+                        <></>
+                    ) : (
+                        <button onClick={() => sendToServer(username)}> add friend </button>
+                    )
+                    }
+                </div>
+            </div>
+
             <div className="posts-container">
                 <div className="posts">
                     <>
@@ -520,4 +557,4 @@ function MyProfilePage() {
         </div>
     );
 }
-export default MyProfilePage;
+export default FriendPage;

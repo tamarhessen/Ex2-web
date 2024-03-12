@@ -83,7 +83,7 @@ function Post({ id, text, PeopleLiked, time, _comments, image, onLike, onRemove,
         // Call the onLike function to handle the backend logic for liking the post
         onLike();
     };
-   const navigateToPage = () => {
+   const navigateToPage = async () => {
        console.log(account, displayName, creatorUsername);
        if (account === displayName) {
            navigate("/MyProfilePage", {
@@ -95,7 +95,26 @@ function Post({ id, text, PeopleLiked, time, _comments, image, onLike, onRemove,
                }
            });
        } else {
-           navigate("/FriendPage", {state: {username: creatorUsername, token: token}});
+           try {
+               const res = await fetch(`http://localhost:5000/api/Users/${username}`, {
+                   method: 'GET',
+                   headers: {
+                       'Content-Type': 'application/json',
+                       'authorization': "bearer " + token,
+                   }
+               });
+               const data = await res.json();
+               console.log("asdasasdasdasdsdasdassdc", data.friends.FriendList, creatorUsername, data.friends.FriendList.includes(creatorUsername))
+               if (data.friends.FriendList.includes(creatorUsername)) {
+                   navigate("/FriendPage", { state: { username: creatorUsername, token: token, _isFriend: true } });
+               } else {
+                   navigate("/FriendPage", { state: { username: creatorUsername, token: token, _isFriend: false } });
+
+               }
+           } catch (error) {
+               console.error("Error checking friendship:", error);
+               // Handle error appropriately
+           }
        }
 
    }
