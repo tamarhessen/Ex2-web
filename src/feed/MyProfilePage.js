@@ -71,6 +71,45 @@ function MyProfilePage() {
 
     fetchUserPosts();
 }, [username, token]);
+    const resizeImage = (file) => {
+        return new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = (event) => {
+                const img = new Image();
+                img.src = event.target.result;
+                img.onload = () => {
+                    const MAX_WIDTH = 800;
+                    const MAX_HEIGHT = 600;
+                    let width = img.width;
+                    let height = img.height;
+                    if (width > height) {
+                        if (width > MAX_WIDTH) {
+                            height *= MAX_WIDTH / width;
+                            width = MAX_WIDTH;
+                        }
+                    } else {
+                        if (height > MAX_HEIGHT) {
+                            width *= MAX_HEIGHT / height;
+                            height = MAX_HEIGHT;
+                        }
+                    }
+                    const canvas = document.createElement('canvas');
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+                    ctx.canvas.toBlob(
+                        (blob) => {
+                            resolve(blob);
+                        },
+                        'image/jpeg',
+                        0.7
+                    );
+                };
+            };
+        });
+    };
 // Load liked status and number of likes from localStorage when component mounts
 useEffect(() => {
     const savedLikes = JSON.parse(localStorage.getItem('likes')) || {};
@@ -92,29 +131,37 @@ useEffect(() => {
 const handleClose = () => setShow(false);
 const handleShow = () => setShow(true);
 
-const handleAddPost = async (text, image) => {
-    let d = new Date();
-    let time = d.getDate() + "-" + (d.getMonth() + 1) + "-" + d.getFullYear();
-    let imageData = '';
-    if (image) {
-        // Read the image file using FileReader
-        const reader = new FileReader();
-        
-        reader.onloadend = () => {
-            // Store the base64 string in the imageData variable
-            imageData = reader.result;
+    const handleAddPost = async (text, image) => {
+        console.log("asגשדגשדגשדגשדגשגשדג")
+        let d = new Date();
+        let time = d.getDate() + "-" + (d.getMonth() + 1) + "-" + d.getFullYear();
+        let imageData = '';
 
-            // Call the API to add the post with the text and base64 image data
-            addPost(text, imageData);
-        };
-        
-        // Convert the image file to base64
-        reader.readAsDataURL(image);
-    } else {
-        // If no image is provided, call the API to add the post without an image
-        addPost(text, '');
-    }
-};
+        try {
+            if (image) {
+                // Compress the image before uploading
+                const compressedImage = await resizeImage(image);
+                // Convert the compressed image blob to base64
+                const reader = new FileReader();
+                reader.readAsDataURL(compressedImage);
+                reader.onloadend = () => {
+                    // Store the base64 string in the imageData variable
+                    imageData = reader.result;
+                    // Call the API to add the post with the text and base64 image data
+                    console.log("aloha")
+                    addPost(text, imageData);
+                };
+            } else {
+                // If no image is provided, call the API to add the post without an image
+                addPost(text, '');
+            }
+        } catch (error) {
+            console.error('Error compressing image:', error);
+            // If there's an error compressing the image, proceed to add the post without the image
+            addPost(text, '');
+        }
+    };
+
 
 const addPost = async (text, imageData) => {
     console.log(imageData);
@@ -245,33 +292,35 @@ const handleAddComment = (id, comment) => {
     console.log(posts[index]);
 };
 
-const handleEditPost = async (id, text, image) => {
-    const updatedPosts = [...posts];
-    const index = updatedPosts.findIndex((post) => post.id === id);
-    let imageData = '';
+    const handleEditPost = async (id, text, image) => {
+        const updatedPosts = [...posts];
+        const index = updatedPosts.findIndex((post) => post.id === id);
+        let imageData = '';
 
-    // Check if image is provided
-    if (image) {
-        // Read the image file using FileReader
-        const reader = new FileReader();
+        // Check if image is provided
+        if (image) {
+            // Read the image file using FileReader
+            const compressedImage = await resizeImage(image);
+            const reader = new FileReader();
+            reader.readAsDataURL(compressedImage);
 
-        reader.onloadend = () => {
-            // Store the base64 string in the imageData variable
-            imageData = reader.result;
+            reader.onloadend = () => {
+                // Store the base64 string in the imageData variable
+                imageData = reader.result;
 
-            // Call the API to update the post with the new text and base64 image data
-            updatePost(id, text, imageData);
-        };
+                // Call the API to update the post with the new text and base64 image data
+                updatePost(id, text, imageData);
+            };
 
-        // Convert the image file to base64
-        reader.readAsDataURL(image);
-    } else {
-        // If no image is provided, update the post with only the new text
-        updatePost(id, text, '');
-    }
-};
+            // Convert the image file to base64
+        } else {
+            // If no image is provided, update the post with only the new text
+            updatePost(id, text, '');
+        }
+    };
 
-const updatePost = async (id, text, imageData) => {
+
+    const updatePost = async (id, text, imageData) => {
     try {
         const response = await fetch(`http://localhost:5000/api/users/${username}/posts/${id}`, {
             method: 'PUT',
@@ -336,7 +385,9 @@ const handleDeleteComment = (postId, comment, comments) => {
     // Check if image is provided
    
       // Read the image file using FileReader
+      const compressedImage = await resizeImage(image);
       const reader = new FileReader();
+      reader.readAsDataURL(compressedImage);
 
       reader.onloadend = () => {
         // Store the base64 string in the imageData variable
@@ -347,8 +398,6 @@ const handleDeleteComment = (postId, comment, comments) => {
       };
 
       // Convert the image file to base64
-      reader.readAsDataURL(image);
-    
   };
 
   // Function to fetch user data from the server
