@@ -11,7 +11,7 @@ function Comments({ text, image, show, setShow, comments, setComments, account, 
       setShow(true)
     }
   };
-
+    console.log("comments", comments);
   return (
     <>
       <div style={{ whiteSpace: 'pre-wrap' }}>{text}</div>

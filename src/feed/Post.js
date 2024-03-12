@@ -27,7 +27,7 @@ function Share() {
 }
 
 function Post({ id, text, PeopleLiked, time, _comments, image, onLike, onRemove, onAddComment,displayName, onEdit, username, userImage, account, mode, onDeleteComment, token, creatorUsername }) {
-    
+    console.log(_comments)
     let modeName = "";
     if (mode) {
         modeName = "light-mode"
@@ -39,14 +39,17 @@ function Post({ id, text, PeopleLiked, time, _comments, image, onLike, onRemove,
     const [shiftDown, setShiftDown] = useState(false);
     const [editImg, setEditImg] = useState(image);
     const [show, setShow] = useState(false);
-    const [comments, setComments] = useState(_comments);
+    const [comments, setComments] = useState(_comments || []);
     const handleClose = () => setShow(false);
     const [liked, setLiked] = useState(false); 
     const handleShow = () => { setShow(true) };
     const [likes,setLikes] = useState(0);
     const navigate = useNavigate()
-
+    console.log("commsdasadmmm",comments, _comments)
     const handleEdit = () => { setEditMode(true); };
+    useEffect(() => {
+        setComments(_comments || []);
+    }, [_comments]);
 
     const handleSaveEdit = () => {
         onEdit(editText, editImg);
@@ -68,6 +71,7 @@ function Post({ id, text, PeopleLiked, time, _comments, image, onLike, onRemove,
                 newComments.push(_comment);
             }
         });
+        console.log("sadsdasdasd")
         setComments(newComments)
         return newComments;
     }

@@ -253,14 +253,17 @@ function PostList({ username,displayName, userImg, mode,token }) {
    
 
     const handleAddComment = (id, comment) => {
+        console.log("asdasdasdasdasdasd", id, comment)
         const updatedPosts = [...posts];
         const index = updatedPosts.findIndex((post) => post.id === id);
         console.log(posts)
         let com = updatedPosts[index].comments;
         let id2 = 0;
         console.log("hola", com);
-        if (com.length !== 0) {
-            id2 = com[com.length - 1].id + 2;
+        if (com) {
+            if (com.length !== 0) {
+                id2 = com[com.length - 1].id + 2;
+            }
         }
         let commentData = {
             comment: comment,
@@ -268,7 +271,12 @@ function PostList({ username,displayName, userImg, mode,token }) {
             userImg: userImg,
             id: id2
         }
-        updatedPosts[index].comments.push(commentData);
+        console.log(updatedPosts[index])
+        if(updatedPosts[index].comments) {
+            updatedPosts[index].comments.push(commentData);
+        } else {
+            updatedPosts[index].comments = [commentData];
+        }
         console.log(commentData, updatedPosts[index].comments);
         setPosts(updatedPosts);
         console.log(posts[index]);
