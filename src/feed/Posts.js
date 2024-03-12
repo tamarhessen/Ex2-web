@@ -119,31 +119,77 @@ function PostList({ username,displayName, userImg, mode,token }) {
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
-
+    const resizeImage = (file) => {
+        return new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = (event) => {
+                const img = new Image();
+                img.src = event.target.result;
+                img.onload = () => {
+                    const MAX_WIDTH = 800;
+                    const MAX_HEIGHT = 600;
+                    let width = img.width;
+                    let height = img.height;
+                    if (width > height) {
+                        if (width > MAX_WIDTH) {
+                            height *= MAX_WIDTH / width;
+                            width = MAX_WIDTH;
+                        }
+                    } else {
+                        if (height > MAX_HEIGHT) {
+                            width *= MAX_HEIGHT / height;
+                            height = MAX_HEIGHT;
+                        }
+                    }
+                    const canvas = document.createElement('canvas');
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+                    ctx.canvas.toBlob(
+                        (blob) => {
+                            resolve(blob);
+                        },
+                        'image/jpeg',
+                        0.7
+                    );
+                };
+            };
+        });
+    };
     const handleAddPost = async (text, image) => {
+        console.log("asגשדגשדגשדגשדגשגשדג")
         let d = new Date();
         let time = d.getDate() + "-" + (d.getMonth() + 1) + "-" + d.getFullYear();
         let imageData = '';
-        if (image) {
-            // Read the image file using FileReader
-            const reader = new FileReader();
-            
-            reader.onloadend = () => {
-                // Store the base64 string in the imageData variable
-                imageData = reader.result;
-    
-                // Call the API to add the post with the text and base64 image data
-                addPost(text, imageData);
-            };
-            
-            // Convert the image file to base64
-            reader.readAsDataURL(image);
-        } else {
-            // If no image is provided, call the API to add the post without an image
+
+        try {
+            if (image) {
+                // Compress the image before uploading
+                const compressedImage = await resizeImage(image);
+                // Convert the compressed image blob to base64
+                const reader = new FileReader();
+                reader.readAsDataURL(compressedImage);
+                reader.onloadend = () => {
+                    // Store the base64 string in the imageData variable
+                    imageData = reader.result;
+                    // Call the API to add the post with the text and base64 image data
+                    console.log("aloha")
+                    addPost(text, imageData);
+                };
+            } else {
+                // If no image is provided, call the API to add the post without an image
+                addPost(text, '');
+            }
+        } catch (error) {
+            console.error('Error compressing image:', error);
+            // If there's an error compressing the image, proceed to add the post without the image
             addPost(text, '');
         }
     };
-    
+
+
     const addPost = async (text, imageData) => {
         console.log(imageData);
         let d = new Date();
@@ -166,6 +212,7 @@ function PostList({ username,displayName, userImg, mode,token }) {
             if (response.ok) {
                 // Post saved successfully, update the state with the new post
                 const newPost = await response.json();
+                console.log(newPost)
                 setPosts(prevPosts => [{
                     id: newPost.id,
                     text: text.trim(),
@@ -173,7 +220,7 @@ function PostList({ username,displayName, userImg, mode,token }) {
                     likes: 0,
                     time: time,
                     comments: [],
-                    image: newPost.image,
+                    image: image,
                     userImg: userImg,
                     username: username,
                     account: displayName,
@@ -290,8 +337,10 @@ function PostList({ username,displayName, userImg, mode,token }) {
         // Check if image is provided
         if (image) {
             // Read the image file using FileReader
+            const compressedImage = await resizeImage(image);
             const reader = new FileReader();
-    
+            reader.readAsDataURL(compressedImage);
+
             reader.onloadend = () => {
                 // Store the base64 string in the imageData variable
                 imageData = reader.result;
@@ -301,7 +350,6 @@ function PostList({ username,displayName, userImg, mode,token }) {
             };
     
             // Convert the image file to base64
-            reader.readAsDataURL(image);
         } else {
             // If no image is provided, update the post with only the new text
             updatePost(id, text, '');
