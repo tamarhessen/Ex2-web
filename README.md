@@ -11,6 +11,9 @@ npm install
 npm start
 ```
 
+# No need to download here anything, by running the items in the server you can get the same code running in localhost:5000
+## This is only if you want to read the code, although it will run on localhost:3000.
+
 ## App.js:
 This file is the base of the app and present the page depending on the path.
 
@@ -94,6 +97,4 @@ When clicked on the add comment button it shows the option to add a comment.
 
 These files hold the visualization of the feed depending on which mode is now active.
 
-## Posts.json
 
-This file hold the data of all the static posts.
