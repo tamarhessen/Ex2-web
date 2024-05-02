@@ -13,35 +13,38 @@ function PostList({ username,displayName, userImg, mode,token }) {
     const [show, setShow] = useState(false);
     const textRef = useRef("");
     const imgRef = useRef("");
+    const [errorMessage, setErrorMessage] = useState("");
+    const [showErrorMessage, setShowErrorMessage] = useState(false);
+
     const staticPosts = JSON.parse(JSON.stringify(postsData))
-     // Function to fetch user data from the server
-  const fetchUserData = async () => {
-    try {
-      const response = await fetch(`http://localhost:5000/api/users/${username}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: 'Bearer ' + token,
-        },
-      });
+    // Function to fetch user data from the server
+    const fetchUserData = async () => {
+        try {
+            const response = await fetch(`http://localhost:5000/api/users/${username}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: 'Bearer ' + token,
+                },
+            });
 
-      if (response.ok) {
-        const userData = await response.json();
-        console.log('User Data:', userData); // Log the userData object
+            if (response.ok) {
+                const userData = await response.json();
+                console.log('User Data:', userData); // Log the userData object
 
-      displayName=userData.displayName;
-       setImage(userData.profilePic);
+                displayName=userData.displayName;
+                setImage(userData.profilePic);
 
-        console.log("sssss" + displayName);
+                console.log("sssss" + displayName);
 
-      } else {
-        console.error('Failed to fetch user data');
-      }
-    } catch (error) {
-      console.error('Error fetching user data:', error);
-    }
-  };
-  
+            } else {
+                console.error('Failed to fetch user data');
+            }
+        } catch (error) {
+            console.error('Error fetching user data:', error);
+        }
+    };
+
     useEffect(() => {
         const fetchUserPosts = async () => {
             try {
@@ -54,21 +57,21 @@ function PostList({ username,displayName, userImg, mode,token }) {
                 });
 
                 if (response.ok) {
-                    const posts = await response.json(); 
+                    const posts = await response.json();
                     console.log(posts)
                     setPosts(posts.map((post, index) => ({
                         id:post["id"],
-                            text: post["PostText"],
-                            PeopleLiked: post["PeopleLiked"],
-                            likes: post[" PostLikes"],
-                            time: post["created"],
-                            comments: post.commentsList,
-                            image: post["PostImg"],
-                            userImg: post["CreatorImg"],
-                            account: post["Creator"],
-                            creatorUsername: post["CreatorUsername"],
-                            token: token
-                     } )));
+                        text: post["PostText"],
+                        PeopleLiked: post["PeopleLiked"],
+                        likes: post[" PostLikes"],
+                        time: post["created"],
+                        comments: post.commentsList,
+                        image: post["PostImg"],
+                        userImg: post["CreatorImg"],
+                        account: post["Creator"],
+                        creatorUsername: post["CreatorUsername"],
+                        token: token
+                    } )));
                 } else {
                     console.error('Failed to fetch user posts');
                 }
@@ -79,7 +82,7 @@ function PostList({ username,displayName, userImg, mode,token }) {
 
         fetchUserPosts();
     }, [username, token]);
-  // Load liked status and number of likes from localStorage when component mounts
+    // Load liked status and number of likes from localStorage when component mounts
     useEffect(() => {
         const savedLikes = JSON.parse(localStorage.getItem('likes')) || {};
         setPosts(posts => posts.map(post => ({
@@ -199,7 +202,7 @@ function PostList({ username,displayName, userImg, mode,token }) {
                 postText: text,
                 postImg: imageData // Send the base64 image data to the server
             };
-    
+
             const response = await fetch(`http://localhost:5000/api/users/${username}/posts`, {
                 method: 'POST',
                 headers: {
@@ -208,7 +211,7 @@ function PostList({ username,displayName, userImg, mode,token }) {
                 },
                 body: JSON.stringify(data)
             });
-    
+
             if (response.ok) {
                 // Post saved successfully, update the state with the new post
                 const newPost = await response.json();
@@ -228,14 +231,16 @@ function PostList({ username,displayName, userImg, mode,token }) {
                 }, ...prevPosts]);
             } else {
                 // Handle error if saving post fails
-                console.error('Failed to save post');
+                setErrorMessage("Couldn't create a post. Try again later.");
+                setShowErrorMessage(true);
             }
         } catch (error) {
+            setShowErrorMessage(true);
             console.error('Error saving post:', error);
         }
     };
-    
-    
+
+
     const handleChangePost = (newPost, oldPost) => {
 
     }
@@ -258,21 +263,21 @@ function PostList({ username,displayName, userImg, mode,token }) {
         } catch (error) {
             console.error('Error deleting post:', error);
         }
-   
+
     };
 
     const handleLikePost = async (id) => {
-    
+
         const updatedPosts = [...posts];
         const index = updatedPosts.findIndex((post) => post.id === id);
         let { liked } = updatedPosts[index];
-    
+
         liked = !liked;
-    //     if(liked==false)
-    //     likes=likes-1;
-    // else
-    // likes=likes+1;
-    
+        //     if(liked==false)
+        //     likes=likes-1;
+        // else
+        // likes=likes+1;
+
         try {
             console.log("aa");
             const response = await fetch(`http://localhost:5000/api/posts/${id}`, {
@@ -282,7 +287,7 @@ function PostList({ username,displayName, userImg, mode,token }) {
                     'Authorization': 'Bearer ' + token,
                 },
             });
-    
+
             if (response.ok) {
                 const updatedPosts = [...posts];
                 const index = updatedPosts.findIndex((post) => post.id === id);
@@ -295,9 +300,9 @@ function PostList({ username,displayName, userImg, mode,token }) {
             console.error('Error updating like status:', error);
         }
     };
-    
-    
-   
+
+
+
 
     const handleAddComment = (id, comment) => {
         console.log("asdasdasdasdasdasd", id, comment)
@@ -333,29 +338,33 @@ function PostList({ username,displayName, userImg, mode,token }) {
         const updatedPosts = [...posts];
         const index = updatedPosts.findIndex((post) => post.id === id);
         let imageData = '';
-    
+        console.log("image", image)
         // Check if image is provided
         if (image) {
             // Read the image file using FileReader
             const compressedImage = await resizeImage(image);
             const reader = new FileReader();
-            reader.readAsDataURL(compressedImage);
+            try {
+                reader.readAsDataURL(compressedImage);
+            } catch (e) {
+                console.log("error: ", e)
+            }
 
             reader.onloadend = () => {
                 // Store the base64 string in the imageData variable
                 imageData = reader.result;
-    
+
                 // Call the API to update the post with the new text and base64 image data
                 updatePost(id, text, imageData);
             };
-    
+
             // Convert the image file to base64
         } else {
             // If no image is provided, update the post with only the new text
             updatePost(id, text, '');
         }
     };
-    
+
     const updatePost = async (id, text, imageData) => {
         try {
             const response = await fetch(`http://localhost:5000/api/users/${username}/posts/${id}`, {
@@ -369,7 +378,7 @@ function PostList({ username,displayName, userImg, mode,token }) {
                     postImg: imageData // Send the base64 image data to the server
                 })
             });
-    
+
             if (response.ok) {
                 // Post updated successfully, update the state with the updated post
                 const updatedPost = await response.json();
@@ -378,16 +387,21 @@ function PostList({ username,displayName, userImg, mode,token }) {
                 updatedPosts[index].text = text;
                 updatedPosts[index].image = imageData; // Update the image URL in the state
                 setPosts(updatedPosts);
+                setErrorMessage("");
             } else {
                 // Handle error if updating post fails
-                console.error('Failed to edit post');
+                setErrorMessage("Couldn't edit a post. Try again later.");
+                setShowErrorMessage(true);
+
             }
         } catch (error) {
+            setErrorMessage("Couldn't edit a post. Try again later.");
+            setShowErrorMessage(true);
             console.error('Error editing post:', error);
         }
     };
-    
-    
+
+
     const handleImageUpload = (image) => {
         setImage(image);
     };
@@ -418,7 +432,7 @@ function PostList({ username,displayName, userImg, mode,token }) {
     posts.map((post) => {
         console.log(post)
     })
-console.log("usernameeee", username, displayName);
+    console.log("usernameeee", username, displayName);
     return (
         <>
             <div>
@@ -447,7 +461,7 @@ console.log("usernameeee", username, displayName);
                             onEdit={(newText, newImg) => handleEditPost(post.id, newText, newImg)}
                             mode={mode}
                             setLikes={setLikes}
-                           displayName={post.account}
+                            displayName={post.account}
                             creatorUsername={post.creatorUsername}
                             token={token}
                         />
@@ -514,6 +528,19 @@ console.log("usernameeee", username, displayName);
                         </Button>
                     </Modal.Footer>
                 </div>
+            </Modal>
+            <Modal show={showErrorMessage} onHide={() => setShowErrorMessage(false)}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Error</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    {errorMessage}
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="primary" onClick={() => setShowErrorMessage(false)}>
+                        Close
+                    </Button>
+                </Modal.Footer>
             </Modal>
         </>
     );
